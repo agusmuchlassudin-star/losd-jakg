@@ -9,38 +9,13 @@ if os.path.exists("header.png.jpg"):
     st.image("header.png.jpg", use_container_width=True)
 
 st.title("🚆 Depo Gerbong Jakarta Gudang - MANAGEMENT TOOLS")
-   # --- RUNNING TEXT PELAN & TULISAN PUTIH NYALA ---
+  # --- RUNNING TEXT - VERSI POLOSAN, DIJAMIN TERANG ---
 st.markdown("""
-<style>
-.marquee-box {
-  overflow: hidden;
-  background: #0F2A44 !important;
-  border: 2px solid #FF6B00;
-  border-radius: 8px;
-  padding: 12px 0px;
-}
-.marquee-track {
-  display: inline-flex;
-  white-space: nowrap;
-  animation: jalan 60s linear infinite;
-}
-.marquee-track span {
-  color: #FFFFFF !important;
-  font-size: 24px !important;
-  font-weight: 800 !important;
-  font-family: Arial !important;
-  padding-right: 80px;
-  text-shadow: 2px 2px 4px black;
-}
-@keyframes jalan {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-</style>
-<div class="marquee-box"><div class="marquee-track">
-<span>SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;|&nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI &nbsp;|&nbsp;</span>
-<span>SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;|&nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI &nbsp;|&nbsp;</span>
-</div></div>
+<div style="background:#FF6B00; border-radius:8px; padding:12px; overflow:hidden;">
+<marquee behavior="scroll" direction="left" scrollamount="3">
+<font color="white" size="5"><b>SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp; | &nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp; | &nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp; | &nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI</b></font>
+</marquee>
+</div>
 """, unsafe_allow_html=True)
 # --- LOGO BARU DI DEPAN / SIDEBAR ---
 LOGO_KAI = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg/500px-Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg.png"
