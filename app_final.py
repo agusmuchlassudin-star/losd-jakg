@@ -151,11 +151,14 @@ simpan_csv("tools.csv", KOLOM_TOOLS, tools)
 peminjam = baca_csv("peminjam.csv", KOLOM_PEMINJAM)
 riwayat = baca_csv("peminjaman.csv", KOLOM_PINJAM)
 
-# --- PAKSA SEMUA JADI TERANG ---
+# --- TEMA ADEM - GAK SILAU ---
 st.markdown("""<style>
-div[data-testid="stAppViewContainer"] * { background-color: #FFFFFF !important; color: #000000 !important; border-color: #DDDDDD !important; }
-div[data-testid="stSidebar"] * { background-color: #0F2A44 !important; color: #FFFFFF !important; }
-input, select, textarea { background-color: #FFFFFF !important; color: #000000 !important; }
+section[data-testid="stSidebar"] { background-color: #0F2A44 !important; }
+section[data-testid="stSidebar"] * { color: #FFFFFF !important; background-color: #0F2A44 !important; }
+section[data-testid="stMain"] { background-color: #DCE6EC !important; }
+section[data-testid="stMain"] * { color: #1A1A1A !important; }
+div[data-testid="stAppViewBlockContainer"] { background-color: #EAF0F4 !important; border-radius: 12px; padding: 20px !important; }
+input { color: #000000 !important; background-color: #FFFFFF !important; }
 button { background-color: #FF7A00 !important; color: #FFFFFF !important; }
 </style>""", unsafe_allow_html=True)
 
