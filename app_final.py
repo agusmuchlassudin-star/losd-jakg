@@ -9,6 +9,32 @@ if os.path.exists("header.png.jpg"):
     st.image("header.png.jpg", use_container_width=True)
 else:
     st.title("🚆 Depo Gerbong Jakarta Gudang - MANAJEMEN TOOLS")
+    # --- TEKS BERJALAN ---
+st.markdown("""
+<style>
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  background: #0F2A44;
+  color: white;
+  font-weight: 800;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid #FF6B00;
+}
+.marquee span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: jalan 25s linear infinite;
+}
+@keyframes jalan {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+</style>
+<div class="marquee"><span>🚆 SELAMAT DATANG DI DEPO GERBONG JAKARTA GUDANG &nbsp;|&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; 📋 CEK KONDISI TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆</span></div>
+""", unsafe_allow_html=True)
 # --- LOGO BARU DI DEPAN / SIDEBAR ---
 LOGO_KAI = "logo.png.jpg"
 
