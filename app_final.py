@@ -37,7 +37,7 @@ from datetime import datetime, date
 st.set_page_config(page_title="Management Tools LOSD JAKG", page_icon="logo.png.jpg", layout="wide")
 # --- HEADER MEMANJANG BALIK LAGI ---
 if os.path.exists("header.png.jpg"):
-    st.image("header.png.jpg", use_container_width=True)
+    st.image("logo.png", use_container_width=True)
 
 st.title("🚆 Depo Gerbong Jakarta Gudang - MANAGEMENT TOOLS")
   # --- RUNNING TEXT STYLE CANTIK V3 - JAKG ---
