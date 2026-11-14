@@ -1,12 +1,4 @@
 import streamlit as st
-# --- TIMPA FUNGSI LAMA BIAR KOTAK JADI PUTIH ---
-def tampilkan_list(data, buat_teks):
-    if not data:
-        st.info("Belum ada data.")
-        return
-    for item in data:
-        teks = buat_teks(item)
-        st.markdown(f"""<div style="background:#FFFFFF; color:#000000; padding:12px; border:1px solid #DDDDDD; border-radius:8px; margin-bottom:8px; font-size:16px; font-weight:600;">{teks}</div>""", unsafe_allow_html=True)
 # --- OBAT BIAR TABEL & TANGGAL TERANG LAGI ---
 st.markdown("""
 <style>
@@ -159,6 +151,15 @@ simpan_csv("tools.csv", KOLOM_TOOLS, tools)
 peminjam = baca_csv("peminjam.csv", KOLOM_PEMINJAM)
 riwayat = baca_csv("peminjaman.csv", KOLOM_PINJAM)
 
+# --- PAKSA SEMUA JADI TERANG ---
+st.markdown("""<style>
+div[data-testid="stAppViewContainer"] * { background-color: #FFFFFF !important; color: #000000 !important; border-color: #DDDDDD !important; }
+div[data-testid="stSidebar"] * { background-color: #0F2A44 !important; color: #FFFFFF !important; }
+input, select, textarea { background-color: #FFFFFF !important; color: #000000 !important; }
+button { background-color: #FF7A00 !important; color: #FFFFFF !important; }
+</style>""", unsafe_allow_html=True)
+
+def tampilkan_list(data, format_func):
 def tampilkan_list(data, format_func):
     if not data: st.info("Belum ada data.")
     else:
