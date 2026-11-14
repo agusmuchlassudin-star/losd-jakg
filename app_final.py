@@ -8,8 +8,7 @@ st.set_page_config(page_title="Manajemen Tools LOSD JAKG", page_icon="logo.png.j
 if os.path.exists("header.png.jpg"):
     st.image("header.png.jpg", use_container_width=True)
 else:
-    st.title("🚆 KAI - MANAJEMEN TOOLS")
-
+    st.title("🚆 Depo Gerbong Jakarta Gudang - MANAJEMEN TOOLS")
 # --- LOGO BARU DI DEPAN / SIDEBAR ---
 LOGO_KAI = "logo.png.jpg"
 
@@ -17,7 +16,7 @@ LOGO_KAI = "logo.png.jpg"
 c_kiri, c_tengah, c_kanan = st.sidebar.columns([1, 2, 1])
 with c_tengah:
     st.image(LOGO_KAI, width=170)
-st.sidebar.markdown("<p style='text-align:center; color:white; font-size:13px; font-weight:bold;'>LOSD JAKG<br>PT Kereta Api Indonesia (Persero)</p>", unsafe_allow_html=True)
+st.sidebar.markdown("<p style='text-align:center; color:white; font-size:13px; font-weight:bold;'>Depo Gerbong Jakarta Gudang<br>LOSD JAKG</p>", unsafe_allow_html=True)
 st.sidebar.markdown("### 🎵 Mars KAI")
 st.sidebar.video("https://www.youtube.com/watch?v=zL9s0WoVHgA")
 st.sidebar.markdown("---")
