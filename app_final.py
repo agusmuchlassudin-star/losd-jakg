@@ -159,39 +159,39 @@ def tampilkan_list(data, format_func):
 
 if menu == "Dashboard":
     # --- DASHBOARD CANTIK ALA KAI ---
-st.markdown("""
-<style>
-.kpi-card { background: white; border-radius: 16px; padding: 18px 20px; box-shadow: 0 4px 18px rgba(0,0,0,0.08); border-top: 5px solid #0F2A44; }
-.kpi-blue { border-top-color: #1A4B8F; }
-.kpi-orange { border-top-color: #F7941D; }
-.kpi-red { border-top-color: #E53935; }
-.kpi-green { border-top-color: #2E9E5B; }
-.kpi-label { font-size: 13px; color: #666; font-weight: 600; }
-.kpi-value { font-size: 38px; font-weight: 800; color: #0F2A44; margin: 2px 0; }
-.kpi-icon { font-size: 28px; float: right; }
-.kpi-sub { font-size: 12px; color: #999; }
-</style>
-""", unsafe_allow_html=True)
-
-st.markdown("### 📊 Dashboard Monitoring Tools")
-st.write("Sistem Informasi Pengelolaan Alat dan Inventaris - Dipo Gerbong Jakarta Gudang")
-
-total_jenis = len(tools); total_stok = sum(int(t.get("Stok", 0) or 0) for t in tools) if tools else 0
-sedang_dipinjam = sum(int(r.get("Jumlah", 0) or 0) for r in riwayat if r.get("Status") == "Dipinjam") if riwayat else 0
-tersedia = total_stok - sedang_dipinjam
-
-c1, c2, c3, c4 = st.columns(4)
-with c1:
-    st.markdown(f"""<div class="kpi-card kpi-blue"><div><span class="kpi-label">Total Jenis Alat</span><span class="kpi-icon">🧰</span></div><div class="kpi-value">{total_jenis}</div><div class="kpi-sub">Jenis alat terdaftar</div></div>""", unsafe_allow_html=True)
-with c2:
-    st.markdown(f"""<div class="kpi-card kpi-orange"><div><span class="kpi-label">Total Stok</span><span class="kpi-icon">📦</span></div><div class="kpi-value">{total_stok}</div><div class="kpi-sub">Total unit di gudang</div></div>""", unsafe_allow_html=True)
-with c3:
-    st.markdown(f"""<div class="kpi-card kpi-red"><div><span class="kpi-label">Sedang Dipinjam</span><span class="kpi-icon">🔧</span></div><div class="kpi-value">{sedang_dipinjam}</div><div class="kpi-sub">Alat sedang keluar</div></div>""", unsafe_allow_html=True)
-with c4:
-    st.markdown(f"""<div class="kpi-card kpi-green"><div><span class="kpi-label">Tersedia</span><span class="kpi-icon">✅</span></div><div class="kpi-value">{tersedia}</div><div class="kpi-sub">Siap dipinjam</div></div>""", unsafe_allow_html=True)
-
-st.markdown("---")
-st.info("👋 Selamat datang di Sistem Peminjaman Tools - Dipo Gerbong Jakarta Gudang")
+  st.markdown("""
+  <style>
+  .kpi-card { background: white; border-radius: 16px; padding: 18px 20px; box-shadow: 0 4px 18px rgba(0,0,0,0.08); border-top: 5px solid #0F2A44; }
+  .kpi-blue { border-top-color: #1A4B8F; }
+  .kpi-orange { border-top-color: #F7941D; }
+  .kpi-red { border-top-color: #E53935; }
+  .kpi-green { border-top-color: #2E9E5B; }
+  .kpi-label { font-size: 13px; color: #666; font-weight: 600; }
+  .kpi-value { font-size: 38px; font-weight: 800; color: #0F2A44; margin: 2px 0; }
+  .kpi-icon { font-size: 28px; float: right; }
+  .kpi-sub { font-size: 12px; color: #999; }
+  </style>
+  """, unsafe_allow_html=True)
+  
+  st.markdown("### 📊 Dashboard Monitoring Tools")
+  st.write("Sistem Informasi Pengelolaan Alat dan Inventaris - Dipo Gerbong Jakarta Gudang")
+  
+  total_jenis = len(tools); total_stok = sum(int(t.get("Stok", 0) or 0) for t in tools) if tools else 0
+  sedang_dipinjam = sum(int(r.get("Jumlah", 0) or 0) for r in riwayat if r.get("Status") == "Dipinjam") if riwayat else 0
+  tersedia = total_stok - sedang_dipinjam
+  
+  c1, c2, c3, c4 = st.columns(4)
+  with c1:
+      st.markdown(f"""<div class="kpi-card kpi-blue"><div><span class="kpi-label">Total Jenis Alat</span><span class="kpi-icon">🧰</span></div><div class="kpi-value">{total_jenis}</div><div class="kpi-sub">Jenis alat terdaftar</div></div>""", unsafe_allow_html=True)
+  with c2:
+      st.markdown(f"""<div class="kpi-card kpi-orange"><div><span class="kpi-label">Total Stok</span><span class="kpi-icon">📦</span></div><div class="kpi-value">{total_stok}</div><div class="kpi-sub">Total unit di gudang</div></div>""", unsafe_allow_html=True)
+  with c3:
+      st.markdown(f"""<div class="kpi-card kpi-red"><div><span class="kpi-label">Sedang Dipinjam</span><span class="kpi-icon">🔧</span></div><div class="kpi-value">{sedang_dipinjam}</div><div class="kpi-sub">Alat sedang keluar</div></div>""", unsafe_allow_html=True)
+  with c4:
+      st.markdown(f"""<div class="kpi-card kpi-green"><div><span class="kpi-label">Tersedia</span><span class="kpi-icon">✅</span></div><div class="kpi-value">{tersedia}</div><div class="kpi-sub">Siap dipinjam</div></div>""", unsafe_allow_html=True)
+  
+  st.markdown("---")
+  st.info("👋 Selamat datang di Sistem Peminjaman Tools - Dipo Gerbong Jakarta Gudang")
 elif menu == "Data Master Tools":
     st.title("📦 Data Master Tools"); st.subheader("Tambah Alat Baru")
     with st.form("form_alat"):
