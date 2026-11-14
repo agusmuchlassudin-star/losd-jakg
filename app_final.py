@@ -13,7 +13,7 @@ else:
 st.markdown("""
 <div style="background:#0F2A44; border:2px solid #FF6B00; border-radius:8px; padding:10px; overflow:hidden;">
 <marquee behavior="scroll" direction="left" scrollamount="4" style="color:#FFCC00; font-size:22px; font-weight:800; font-family:Arial;">
-🚆 SELAMAT DATANG DI DEPO GERBONG JAKARTA GUDANG &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;&nbsp;|&nbsp;&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;&nbsp;|&nbsp;&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;&nbsp;|&nbsp;&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆
+🚆 SELAMAT DATANG DI MANAJEMEN TOOLS LOSD JAKG &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;&nbsp;|&nbsp;&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;&nbsp;|&nbsp;&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;&nbsp;|&nbsp;&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆
 </marquee>
 </div>
 """, unsafe_allow_html=True)
