@@ -3,10 +3,10 @@ import csv
 import os
 from datetime import datetime, date
 
-st.set_page_config(page_title="Manajemen Tools LOSD JAKG", page_icon="logo.png", layout="wide")
+st.set_page_config(page_title="Manajemen Tools LOSD JAKG", page_icon="logo.png.jpg", layout="wide")
 import os
 if os.path.exists("header.png"):
-    st.image("header.png", use_container_width=True)
+    st.image("header.png.jpg", use_container_width=True)
 else:
     st.title("🚆 KAI - MANAJEMEN TOOLS")
 LOGO_KAI = "https://upload.wikimedia.org/wikipedia/commons/5/56/Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg"
