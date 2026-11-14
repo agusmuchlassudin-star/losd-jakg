@@ -160,7 +160,6 @@ button { background-color: #FF7A00 !important; color: #FFFFFF !important; }
 </style>""", unsafe_allow_html=True)
 
 def tampilkan_list(data, format_func):
-def tampilkan_list(data, format_func):
     if not data: st.info("Belum ada data.")
     else:
         for item in data: st.write("• " + format_func(item)); st.write("---")
