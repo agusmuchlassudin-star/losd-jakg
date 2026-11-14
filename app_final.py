@@ -9,28 +9,28 @@ if os.path.exists("header.png.jpg"):
     st.image("header.png.jpg", use_container_width=True)
 
 st.title("🚆 Depo Gerbong Jakarta Gudang - MANAGEMENT TOOLS")
-   # --- RUNNING TEXT NYAMBUNG TERUS, GAK PAKE BERHENTI ---
+   # --- RUNNING TEXT PELAN & TULISAN PUTIH NYALA ---
 st.markdown("""
 <style>
 .marquee-box {
   overflow: hidden;
-  background: #0F2A44;
+  background: #0F2A44 !important;
   border: 2px solid #FF6B00;
   border-radius: 8px;
-  padding: 10px 0px;
-  white-space: nowrap;
+  padding: 12px 0px;
 }
 .marquee-track {
   display: inline-flex;
   white-space: nowrap;
-  animation: jalan 30s linear infinite;
+  animation: jalan 60s linear infinite;
 }
 .marquee-track span {
-  color: #FFCC00;
-  font-size: 22px;
-  font-weight: 800;
-  font-family: Arial;
+  color: #FFFFFF !important;
+  font-size: 24px !important;
+  font-weight: 800 !important;
+  font-family: Arial !important;
   padding-right: 80px;
+  text-shadow: 2px 2px 4px black;
 }
 @keyframes jalan {
   0% { transform: translateX(0); }
@@ -38,8 +38,8 @@ st.markdown("""
 }
 </style>
 <div class="marquee-box"><div class="marquee-track">
-<span>🚆 SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;|&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆 &nbsp;|&nbsp;</span>
-<span>🚆 SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;|&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆 &nbsp;|&nbsp;</span>
+<span>SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;|&nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI &nbsp;|&nbsp;</span>
+<span>SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;|&nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI &nbsp;|&nbsp;</span>
 </div></div>
 """, unsafe_allow_html=True)
 # --- LOGO BARU DI DEPAN / SIDEBAR ---
