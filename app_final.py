@@ -9,13 +9,42 @@ if os.path.exists("header.png.jpg"):
     st.image("header.png.jpg", use_container_width=True)
 
 st.title("🚆 Depo Gerbong Jakarta Gudang - MANAGEMENT TOOLS")
-  # --- RUNNING TEXT - VERSI POLOSAN, DIJAMIN TERANG ---
+  # --- RUNNING TEXT STYLE CANTIK V3 - JAKG ---
 st.markdown("""
-<div style="background:#FF6B00; border-radius:8px; padding:12px; overflow:hidden;">
-<marquee behavior="scroll" direction="left" scrollamount="3">
-<font color="white" size="5"><b>SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp; | &nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp; | &nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp; | &nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI</b></font>
-</marquee>
-</div>
+<style>
+.jakg-box-v3 {
+  overflow: hidden;
+  background: linear-gradient(90deg, #0F2A44 0%, #1A4A7A 50%, #FF6B00 100%) !important;
+  border: 2px solid #FFCC00 !important;
+  border-radius: 12px !important;
+  padding: 14px 0px !important;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.4) !important;
+  white-space: nowrap !important;
+}
+.jakg-track-v3 {
+  display: inline-flex !important;
+  white-space: nowrap !important;
+  animation: jakg-jalan-v3 60s linear infinite !important;
+}
+.jakg-track-v3 span {
+  color: #FFEB00 !important;
+  -webkit-text-fill-color: #FFEB00 !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  font-family: Arial, sans-serif !important;
+  letter-spacing: 1px !important;
+  text-shadow: 0px 0px 10px #FFEB00, 2px 2px 3px black !important;
+  padding-right: 80px !important;
+}
+@keyframes jakg-jalan-v3 {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+</style>
+<div class="jakg-box-v3"><div class="jakg-track-v3">
+<span style="color:#FFEB00 !important; -webkit-text-fill-color:#FFEB00 !important;">SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp; ✦ &nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp; ✦ &nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp; ✦ &nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI &nbsp; ✦ &nbsp;</span>
+<span style="color:#FFEB00 !important; -webkit-text-fill-color:#FFEB00 !important;">SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp; ✦ &nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp; ✦ &nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp; ✦ &nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI &nbsp; ✦ &nbsp;</span>
+</div></div>
 """, unsafe_allow_html=True)
 # --- LOGO BARU DI DEPAN / SIDEBAR ---
 LOGO_KAI = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg/500px-Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg.png"
