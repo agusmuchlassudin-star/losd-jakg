@@ -245,6 +245,16 @@ elif menu == "Pengembalian Tools":
                         if t.get("Nama Alat") == item.get("Nama Alat"): t["Stok"] = str(int(t.get("Stok", 0) or 0) + int(item.get("Jumlah", 0) or 0))
                 simpan_csv("peminjaman.csv", KOLOM_PINJAM, riwayat); simpan_csv("tools.csv", KOLOM_TOOLS, tools); st.success(f"Berhasil mengembalikan {len(dipilih)} alat!"); st.rerun()
         else: st.info("Centang dulu alatnya di atas 👆")
+# --- TIMPA FUNGSI LAMA BIAR KOTAK JADI PUTIH ---
+def tampilkan_list(data, buat_teks):
+    if not data:
+        st.info("Belum ada data.")
+        return
+    for item in data:
+        teks = buat_teks(item)
+        st.markdown(f"""<div style="background:#FFFFFF; color:#000000; padding:12px; border:1px solid #DDDDDD; border-radius:8px; margin-bottom:8px; font-size:16px; font-weight:600;">{teks}</div>""", unsafe_allow_html=True)
+
+elif menu == "Riwayat Peminjaman":
 elif menu == "Riwayat Peminjaman":
     st.title("📋 Riwayat Peminjaman"); st.subheader("🔍 Cari Berdasarkan Tanggal")
     col1, col2, col3 = st.columns([2, 2, 1])
