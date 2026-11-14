@@ -208,10 +208,40 @@ elif menu == "Data Master Tools":
             col_tulis, col_hapus = st.columns([4, 1])
             with col_tulis: st.write(f"🔧 {t.get('Nama Alat','-')} | Kode: {t.get('Kode','-')} | Stok: {t.get('Stok','0')}")
             with col_hapus:
-                if st.button("🗑️ Hapus", key=f"hapus_alat_{t.get('Kode','')}_{idx}"):
-                    nama_hapus = t.get("Nama Alat")
-                    if any(r.get("Nama Alat") == nama_hapus and r.get("Status") == "Dipinjam" for r in riwayat): st.error(f"Gak bisa hapus {nama_hapus}, masih ada yang pinjam!")
-                    else: simpan_csv("tools.csv", KOLOM_TOOLS, [x for x in tools if x != t]); st.success(f"Alat {nama_hapus} berhasil dihapus!"); st.rerun()
+                # --- TOMBOL EDIT + HAPUS JEJERAN ---
+col_edit, col_hapus = st.columns([1, 1])
+with col_edit:
+    if st.button("✏️ Edit", key=f"edit_{i}"):
+        st.session_state.edit_index = i
+        st.rerun()
+with col_hapus:
+    if st.button("🗑️ Hapus", key=f"hapus_{i}"):
+        tools.pop(i)
+        simpan_data()
+        st.rerun()
+
+# --- FORM EDIT MUNCUL KALO DIPENCET ---
+if st.session_state.get("edit_index") == i:
+    st.markdown("---")
+    st.markdown(f"### ✏️ Edit Alat: {t.get('Nama')}")
+    nama_baru = st.text_input("Nama Alat", value=t.get("Nama", ""), key=f"nama_{i}")
+    stok_baru = st.number_input("Stok", value=int(t.get("Stok", 0) or 0), min_value=0, key=f"stok_{i}")
+    lokasi_baru = st.text_input("Lokasi", value=t.get("Lokasi", ""), key=f"lokasi_{i}")
+
+    c_simpan, c_batal = st.columns(2)
+    with c_simpan:
+        if st.button("💾 Simpan Perubahan", key=f"simpan_{i}"):
+            tools[i]["Nama"] = nama_baru
+            tools[i]["Stok"] = stok_baru
+            tools[i]["Lokasi"] = lokasi_baru
+            simpan_data()
+            st.session_state.edit_index = None
+            st.success("Berhasil diedit!")
+            st.rerun()
+    with c_batal:
+        if st.button("❌ Batal", key=f"batal_{i}"):
+            st.session_state.edit_index = None
+            st.rerun()
             st.write("---")
 elif menu == "Data Peminjam":
     st.title("👤 Data Peminjam"); st.subheader("Tambah Peminjam Baru")
