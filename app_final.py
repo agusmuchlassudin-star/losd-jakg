@@ -1,4 +1,35 @@
 import streamlit as st
+# --- OBAT BIAR TABEL & TANGGAL TERANG LAGI ---
+st.markdown("""
+<style>
+/* Kotak tanggal & semua input jadi putih, tulisan item */
+input, .stDateInput input, .stTextInput input, .stSelectbox div {
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+/* Label Dari Tanggal / Sampai Tanggal jadi item terang */
+label, .stDateInput label {
+  color: #000000 !important;
+}
+/* Tabel Riwayat jadi putih, tulisan item */
+div[data-testid="stDataFrame"] *, div[data-testid="stTable"] * {
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+  -webkit-text-fill-color: #000000 !important;
+}
+/* Judul kolom tabel tetep biru dongker, tulisan putih biar cakep */
+div[data-testid="stDataFrame"] thead th, div[data-testid="stDataFrame"] [role="columnheader"] {
+  background-color: #0F2A44 !important;
+  color: #FFFFFF !important;
+  -webkit-text-fill-color: #FFFFFF !important;
+}
+/* Tombol Cari & Tampilkan Semua tetep oren */
+button {
+  color: #FFFFFF !important;
+}
+</style>
+""", unsafe_allow_html=True)
 import csv
 import os
 from datetime import datetime, date
