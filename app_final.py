@@ -5,10 +5,7 @@ from datetime import datetime, date
 
 st.set_page_config(page_title="Manajemen Tools LOSD JAKG", page_icon="logo.png.jpg", layout="wide")
 
-if os.path.exists("header.png.jpg"):
-    st.image("header.png.jpg", use_container_width=True)
-else:
-    st.title("🚆 Depo Gerbong Jakarta Gudang - MANAJEMEN TOOLS")
+st.title("🚆 Depo Gerbong Jakarta Gudang - MANAJEMEN TOOLS")
     # --- TEKS BERJALAN - VERSI PELAN & JELAS ---
 st.markdown("""
 <div style="background:#0F2A44; border:2px solid #FF6B00; border-radius:8px; padding:10px; overflow:hidden;">
