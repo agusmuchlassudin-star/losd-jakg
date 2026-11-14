@@ -3,14 +3,8 @@ import csv
 import os
 from datetime import datetime, date
 
-st.set_page_config(page_title="Sistem Management Tools LOSD JAKG", page_icon="🚆", layout="wide")
-
-import streamlit as st
-import csv
-import os
-from datetime import datetime, date
-
-st.set_page_config(page_title="Sistem Management Tools LOSD JAKG", page_icon="🚆", layout="wide")
+st.set_page_config(page_title="Manajemen Tools LOSD JAKG", page_icon="logo.png", layout="wide")
+st.image("header.png", use_container_width=True)
 
 LOGO_KAI = "https://upload.wikimedia.org/wikipedia/commons/5/56/Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg"
 
