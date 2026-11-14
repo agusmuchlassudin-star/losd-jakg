@@ -205,44 +205,36 @@ elif menu == "Data Master Tools":
     if not tools_tampil: st.info("Belum ada data.")
     else:
         for idx, t in enumerate(tools_tampil):
-            col_tulis, col_hapus = st.columns([4, 1])
-            with col_tulis: st.write(f"🔧 {t.get('Nama Alat','-')} | Kode: {t.get('Kode','-')} | Stok: {t.get('Stok','0')}")
-            with col_hapus:
-                # --- TOMBOL EDIT + HAPUS JEJERAN ---
-col_edit, col_hapus = st.columns([1, 1])
-with col_edit:
-    if st.button("✏️ Edit", key=f"edit_{i}"):
-        st.session_state.edit_index = i
-        st.rerun()
-with col_hapus:
-    if st.button("🗑️ Hapus", key=f"hapus_{i}"):
-        tools.pop(i)
-        simpan_data()
-        st.rerun()
-
-# --- FORM EDIT MUNCUL KALO DIPENCET ---
-if st.session_state.get("edit_index") == i:
-    st.markdown("---")
-    st.markdown(f"### ✏️ Edit Alat: {t.get('Nama')}")
-    nama_baru = st.text_input("Nama Alat", value=t.get("Nama", ""), key=f"nama_{i}")
-    stok_baru = st.number_input("Stok", value=int(t.get("Stok", 0) or 0), min_value=0, key=f"stok_{i}")
-    lokasi_baru = st.text_input("Lokasi", value=t.get("Lokasi", ""), key=f"lokasi_{i}")
-
-    c_simpan, c_batal = st.columns(2)
-    with c_simpan:
-        if st.button("💾 Simpan Perubahan", key=f"simpan_{i}"):
-            tools[i]["Nama"] = nama_baru
-            tools[i]["Stok"] = stok_baru
-            tools[i]["Lokasi"] = lokasi_baru
-            simpan_data()
-            st.session_state.edit_index = None
-            st.success("Berhasil diedit!")
-            st.rerun()
-    with c_batal:
-        if st.button("❌ Batal", key=f"batal_{i}"):
-            st.session_state.edit_index = None
-            st.rerun()
-            st.write("---")
+            col_tulis, col_edit, col_hapus2 = st.columns([4, 1, 1])
+            with col_tulis:
+                st.write(f"🔧 {t.get('Nama Alat','-')} | Kode: {t.get('Kode','-')} | Stok: {t.get('Stok',0)}")
+            if col_edit.button("✏️ Edit", key=f"edit_{idx}"):
+                st.session_state.edit_index = idx
+                st.rerun()
+            if col_hapus2.button("🗑️ Hapus", key=f"hapus_{idx}"):
+                # cari index asli di list tools
+                idx_asli = tools.index(t) if t in tools else idx
+                tools.pop(idx_asli)
+                simpan_data()
+                st.rerun()
+            if st.session_state.get("edit_index") == idx:
+                st.markdown("---")
+                st.markdown(f"### ✏️ Edit Alat: {t.get('Nama Alat')}")
+                nama_baru = st.text_input("Nama Alat", value=t.get("Nama Alat", ""), key=f"nama_{idx}")
+                stok_baru = st.number_input("Stok", value=int(t.get("Stok", 0) or 0), min_value=0, key=f"stok_{idx}")
+                kode_baru = st.text_input("Kode", value=t.get("Kode", ""), key=f"kode_{idx}")
+                c_simpan, c_batal = st.columns(2)
+                if c_simpan.button("💾 Simpan", key=f"simpan_{idx}"):
+                    idx_asli = tools.index(t) if t in tools else idx
+                    tools[idx_asli]["Nama Alat"] = nama_baru
+                    tools[idx_asli]["Stok"] = stok_baru
+                    tools[idx_asli]["Kode"] = kode_baru
+                    simpan_data()
+                    st.session_state.edit_index = None
+                    st.rerun()
+                if c_batal.button("❌ Batal", key=f"batal_{idx}"):
+                    st.session_state.edit_index = None
+                    st.rerun()
 elif menu == "Data Peminjam":
     st.title("👤 Data Peminjam"); st.subheader("Tambah Peminjam Baru")
     with st.form("form_peminjam"):
