@@ -15,7 +15,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 # --- LOGO BARU DI DEPAN / SIDEBAR ---
-LOGO_KAI = "logo.png.jpg"
+LOGO_KAI = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Logo_KAI.svg/1200px-Logo_KAI.svg.png"
 
 # --- LOGO KAI DITENGAH SIDEBAR ---
 c_kiri, c_tengah, c_kanan = st.sidebar.columns([1, 2, 1])
