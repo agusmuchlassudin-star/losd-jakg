@@ -39,7 +39,7 @@ st.set_page_config(page_title="Management Tools LOSD JAKG", page_icon="logo.png.
 if os.path.exists("header.png.jpg"):
     st.image("logo.png", use_container_width=True)
 
-  # --- RUNNING TEXT STYLE CANTIK V3 - JAKG ---
+  # --- RUNNING TEXT STYLE CANTIK V3 PALING ATAS - JAKG ---
 st.markdown("""
 <style>
 .jakg-box-v3 {
@@ -88,15 +88,6 @@ st.sidebar.markdown("### 🎵 Mars KAI")
 st.sidebar.video("https://www.youtube.com/watch?v=zL9s0WoVHgA")
 st.sidebar.markdown("---")
 
-# --- 1. JUDUL DI ATAS BESAR ---
-st.markdown("""
-<div style='background: linear-gradient(90deg, #0F2A44 0%, #0066CC 60%, #FF6B00 100%); padding: 22px; border-radius: 15px; text-align: center; color: white;'>
-    <div style='font-size: 38px;'>🚆 🚄 🚂 🚃 🚃 🚃</div>
-    <div style='font-size: 28px; font-weight: 800;'>SISTEM MANAGEMENT TOOLS LOSD JAKG</div>
-    <div style='font-size: 14px; opacity: 0.9;'>PT Kereta Api Indonesia (Persero) - Depo Jakarta Gudang</div>
-    <div style='margin-top:10px; height:4px; background: repeating-linear-gradient(90deg, white 0 20px, transparent 20px 30px); border-radius: 10px;'></div>
-</div>
-""", unsafe_allow_html=True)
 
 st.markdown("""
 <style>
