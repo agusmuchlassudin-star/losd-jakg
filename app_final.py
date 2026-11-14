@@ -8,17 +8,42 @@ st.set_page_config(page_title="Management Tools LOSD JAKG", page_icon="logo.png.
 if os.path.exists("header.png.jpg"):
     st.image("header.png.jpg", use_container_width=True)
 
-st.title("🚆 Depo Gerbong Jakarta Gudang - MANAJEMEN TOOLS")
-    # --- TEKS BERJALAN - VERSI PELAN & JELAS ---
+st.title("🚆 Depo Gerbong Jakarta Gudang - MANAGEMENT TOOLS")
+   # --- RUNNING TEXT NYAMBUNG TERUS, GAK PAKE BERHENTI ---
 st.markdown("""
-<div style="background:#0F2A44; border:2px solid #FF6B00; border-radius:8px; padding:10px; overflow:hidden;">
-<marquee behavior="scroll" direction="left" scrollamount="4" style="color:#FFCC00; font-size:22px; font-weight:800; font-family:Arial;">
-🚆 SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;&nbsp;|&nbsp;&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;&nbsp;|&nbsp;&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;&nbsp;|&nbsp;&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆
-</marquee>
-</div>
+<style>
+.marquee-box {
+  overflow: hidden;
+  background: #0F2A44;
+  border: 2px solid #FF6B00;
+  border-radius: 8px;
+  padding: 10px 0px;
+  white-space: nowrap;
+}
+.marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: jalan 30s linear infinite;
+}
+.marquee-track span {
+  color: #FFCC00;
+  font-size: 22px;
+  font-weight: 800;
+  font-family: Arial;
+  padding-right: 80px;
+}
+@keyframes jalan {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+</style>
+<div class="marquee-box"><div class="marquee-track">
+<span>🚆 SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;|&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆 &nbsp;|&nbsp;</span>
+<span>🚆 SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;|&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;|&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;|&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;|&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆 &nbsp;|&nbsp;</span>
+</div></div>
 """, unsafe_allow_html=True)
 # --- LOGO BARU DI DEPAN / SIDEBAR ---
-LOGO_KAI = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Logo_KAI.svg/1200px-Logo_KAI.svg.png"
+LOGO_KAI = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg/500px-Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg.png"
 
 # --- LOGO KAI DITENGAH SIDEBAR ---
 c_kiri, c_tengah, c_kanan = st.sidebar.columns([1, 2, 1])
