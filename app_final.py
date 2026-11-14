@@ -3,7 +3,7 @@ import csv
 import os
 from datetime import datetime, date
 
-st.set_page_config(page_title="Manajemen Tools LOSD JAKG", page_icon="logo.png.jpg", layout="wide")
+st.set_page_config(page_title="Management Tools LOSD JAKG", page_icon="logo.png.jpg", layout="wide")
 # --- HEADER MEMANJANG BALIK LAGI ---
 if os.path.exists("header.png.jpg"):
     st.image("header.png.jpg", use_container_width=True)
@@ -13,7 +13,7 @@ st.title("🚆 Depo Gerbong Jakarta Gudang - MANAJEMEN TOOLS")
 st.markdown("""
 <div style="background:#0F2A44; border:2px solid #FF6B00; border-radius:8px; padding:10px; overflow:hidden;">
 <marquee behavior="scroll" direction="left" scrollamount="4" style="color:#FFCC00; font-size:22px; font-weight:800; font-family:Arial;">
-🚆 SELAMAT DATANG DI MANAJEMEN TOOLS LOSD JAKG &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;&nbsp;|&nbsp;&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;&nbsp;|&nbsp;&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;&nbsp;|&nbsp;&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆
+🚆 SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp;&nbsp;|&nbsp;&nbsp; ⚠️ UTAMAKAN KESELAMATAN KERJA &nbsp;&nbsp;|&nbsp;&nbsp; 🛠️ KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp;&nbsp;|&nbsp;&nbsp; 📋 CEK TOOLS SEBELUM & SESUDAH PEMAKAIAN &nbsp;&nbsp;|&nbsp;&nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI 🚆
 </marquee>
 </div>
 """, unsafe_allow_html=True)
