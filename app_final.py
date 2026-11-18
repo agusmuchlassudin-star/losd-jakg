@@ -31,6 +31,7 @@ button {
 </style>
 """, unsafe_allow_html=True)
 import csv
+import pandas as pd
 import os
 from datetime import datetime, date
 
@@ -125,10 +126,21 @@ KOLOM_PINJAM = ["Nama Peminjam", "Nama Alat", "Jumlah", "Tanggal Pinjam", "Statu
 
 LIST_ALAT_LO = ["Tang Buaya Bengkok 10","Xing Bo","Preasure Sprayer","Bearing Sparator","Thermometer","Insulation Tester / Tes Pen","Air Duster","Flaring Tools","Waterpas 600mm","Kunci Pas Ring Ratchet 36","Gerinda Tangan","Bor Tangan","Pompa","Mesin Amplas","Jig Saw","Dongkrak Simplex 10T","Dongkrak Simplex 5T","Dongkrak Hidrolik 30T","Dongkrak Hidrolik 10T","Box MCB Plastik","S21 Portable","Rambu Perawatan Genset","Rambu Perawatan PB / Perbaikan","Rambu Perawatan P3","Rambu Perawatan P6","Rambu Perawatan P12","Spray Gun F75","Kaca Mata Safety","Kaca Mata Las","Rompi Kolong","Kunci Inggris","Kunci Pipa","Tang Kombinasi","Tang Potong","Snapring Straight","Snapring Curved","Pahat","Palu Kecil","Palu Besar","Palu Besar 5 Kg","Linggis","Gagang Kunci Shock 3/4","Ragum","Box Impack","Vacum Cleaner Milwaukee","Back To Back","Kunci Momen","Kunci Momen Kecil Uk 1/2","Diameter Roda","Blok Kalibrasi","Crack Detector","Sarung Tangan Las","Goseave / Baju Las","Kawat Las RB & LB","Topeng Las","Mesin Las","Kabel Roll","Gerinda Cutting","Crimping Hidrolik","Kunci Sok 1 Set 60 Pc (SATA)","Impack 1/2","Stopwatch","Clearence","Meteran 7.5 m","Sigmat","Manometer","Mal Knuckle","Obeng (+)","Obeng (-)","Obeng Ketok","Kunci (L) Bintang","Kunci (L)","Mata Bor 4.0","Mata Bor 4.5","Mata Bor 5.0","Mata Bor 8.0","Mata Bor 10.0","Mata Bor 16","Mata Bor Beton","Kunci Shock","Gergaji Besi","Metrix","Cidi Met","Kepala Snei","Box Senai 1 Set","Mesin Senai","Mistar Panjang","Mistar Siku","Semboyan 21 Malam Portebel","Box S21","Kape","Sikat Kawat","Stang Sealler Botol Manual","Stang Sealler Botol Milwaukee","Senter","Senter Kepala Milwaukee","Senter Kepala Sunrei","Aki 60A","Tang Krimping / Skun","Gunting Potong","Tang Ripet","Bateray Tester","Tang Amper","Merger","Multimeter Digital 101","Kabel Kopler Panjang","Kabel Kopler","Karet List Kaca U","Selang Kawat","Manipol Gauge AC","Kunci T 10","Kunci T 12","Kunci T 13","Kunci T 17","Kunci T 19","Charger Accu","Tekel","Kunci Ring Pas 16","Kunci Ring Pas 17","Kunci Ring Pas 19","Kunci Ring Pas 22","Kunci Ring Pas 23","Kunci Ring Pas 24","Kunci Ring Pas 26","Kunci Ring Pas 27","Kunci Ring Pas 28","Kunci Ring Pas 29","Kunci Ring Pas 30","Kunci Ring Pas 32","Kunci Ring Pas 34","Kunci Ring Pas 36","Kunci Ring Pas 38","Kunci Ring 20,22","Kunci Ring 21,23","Kunci Ring 24,27","Kunci Ring 25,28","Kunci Ring 30,32","Kunci Pas 14,17","Kunci Pas 16,17","Kunci Pas 21-23","Kunci Pas 25-28","Kunci Pas 30-32","Kunci Ring Pas Ratchet 8,10,12,13,14,16,17,19,24","Kunci L Set Model T 2.5,3,4,5,6,8,10","Mesin Gerinda Portebel","Bor Tangan Portebel","Bor Duduk","Bateray Milwaukee","Bateray Bor Portable","Tangga Kecil","Rapid Charger Milwaukee","Beri","Heavy Duty Nut Splitter","Cordless Portable","Impack 3/4","Kunci Ring 30/32","Kunci Ring 28/25","Kunci Ring 27/24","Kunci Ring 23/21","Kunci Ring 22/20","Kunci Ring 8/9","Kunci Ring 7/6","Kunci Ring Pas 23","Kunci Ring Pas 22","Kunci Pas 26/24","Kunci Pas 23/21","Kunci Pas 15/14","Kunci T 17"]
 
-if not os.path.exists("tools.csv") or len(baca_csv("tools.csv", KOLOM_TOOLS)) == 0:
+# --- TARIK DATA DARI SHEET DATA_BERSIH ---
+SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV6iCRsvA3S8uCNNdNbvvrWnFxKxRoepGrZGL_3bWswWttq8ECPGMDNTL8UhqgTyeOcfkm6gkTODEJ/pub?gid=1373973017&single=true&output=csv"
+try:
+    df_sheet = pd.read_csv(SHEET_URL)
+    df_sheet.columns = [c.strip() for c in df_sheet.columns]
+    # Ambil kolom Nama Alat dari Sheet, buang yang kosong
+    col_nama = [c for c in df_sheet.columns if "Nama" in c or "Alat" in c][0]
+    list_dari_sheet = df_sheet[col_nama].dropna().astype(str).str.strip().tolist()
+    list_dari_sheet = [x for x in list_dari_sheet if x != "" and x.lower() != "nan"]
+    data_awal_tools = [{"Nama Alat": nama_alat, "Kode": f"TL-{i:03d}", "Stok": "1"} for i, nama_alat in enumerate(list_dari_sheet, start=1)]
+except Exception as e:
     data_awal_tools = [{"Nama Alat": nama_alat, "Kode": f"TL-{i:03d}", "Stok": "1"} for i, nama_alat in enumerate(LIST_ALAT_LO, start=1)]
-    simpan_csv("tools.csv", KOLOM_TOOLS, data_awal_tools)
 
+# Selalu update tools.csv dari Sheet biar sinkron
+simpan_csv("tools.csv", KOLOM_TOOLS, data_awal_tools)
 if not os.path.exists("peminjam.csv") or len(baca_csv("peminjam.csv", KOLOM_PEMINJAM)) == 0:
     simpan_csv("peminjam.csv", KOLOM_PEMINJAM, [{"Nama Peminjam": "agus", "NIPP": "12345", "Bagian": "Teknik"},{"Nama Peminjam": "Budi", "NIPP": "12346", "Bagian": "Listrik"},{"Nama Peminjam": "Siti", "NIPP": "12347", "Bagian": "Mekanik"}])
 
