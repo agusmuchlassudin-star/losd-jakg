@@ -233,9 +233,9 @@ elif menu == "Data Master Tools":
     if cari_alat: st.write(f"Ditemukan {len(tools_tampil)} alat")
     if not tools_tampil: st.info("Belum ada data.")
     else:
-    for t in tools_tampil:
-        kode_t = str(t.get('Kode',''))
-        col_tulis, col_edit, col_hapus2 = st.columns([4, 1, 1])
+        for t in tools_tampil:
+            kode_t = str(t.get('Kode',''))
+            col_tulis, col_edit, col_hapus2 = st.columns([4, 1, 1])
         with col_tulis:
             st.write(f"{t.get('Kode','')} - {t.get('Nama','')} | Stok: {t.get('Stok','')}")
         if col_edit.button("✏️ Edit", key=f"edit_{kode_t}"):
