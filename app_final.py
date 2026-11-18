@@ -114,6 +114,19 @@ def baca_csv(nama_file, kolom):
         return [row for row in reader if any(row.values())]
 
 def simpan_csv(nama_file, kolom, data):
+  def simpan_data():
+    try:
+        simpan_csv("tools.csv", KOLOM_TOOLS, tools)
+    except Exception:
+        pass
+    try:
+        simpan_csv("peminjam.csv", KOLOM_PEMINJAM, peminjam)
+    except Exception:
+        pass
+    try:
+        simpan_csv("transaksi.csv", KOLOM_TRANSAKSI, transaksi)
+    except Exception:
+        pass
     with open(nama_file, 'w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=kolom); writer.writeheader(); writer.writerows(data)
 
