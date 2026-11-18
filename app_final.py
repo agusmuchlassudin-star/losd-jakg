@@ -230,6 +230,32 @@ elif menu == "Data Master Tools":
             if nama and kode: tambah_data("tools.csv", KOLOM_TOOLS, {"Nama Alat": nama, "Kode": kode, "Stok": str(int(stok))}); st.success(f"Alat {nama} berhasil ditambahkan!"); st.rerun()
             else: st.error("Nama dan Kode wajib diisi!")
     st.write("---")
+      # --- BLOK EDIT ---
+    if "edit_kode" in st.session_state and st.session_state.edit_kode:
+        tool_edit = next((x for x in tools if x.get("Kode","") == st.session_state.edit_kode), None)
+        if tool_edit:
+            st.subheader(f"Edit Alat: {st.session_state.edit_kode}")
+            edit_nama = st.text_input("Edit Nama Alat", value=tool_edit.get("Nama Alat",""), key="edit_nama_input")
+            try:
+                edit_stok_awal = int(tool_edit.get("Stok", 0) or 0)
+            except:
+                edit_stok_awal = 0
+            edit_stok = st.number_input("Edit Stok", min_value=0, value=edit_stok_awal, key="edit_stok_input")
+            c_simpan, c_batal = st.columns(2)
+            if c_simpan.button("Simpan Perubahan", key="simpan_edit_btn"):
+                for x in tools:
+                    if x.get("Kode","") == st.session_state.edit_kode:
+                        x["Nama Alat"] = edit_nama
+                        x["Stok"] = str(edit_stok)
+                simpan_csv("tools.csv", KOLOM_TOOLS, tools)
+                del st.session_state.edit_kode
+                st.rerun()
+            if c_batal.button("Batal", key="batal_edit_btn"):
+                del st.session_state.edit_kode
+                st.rerun()
+        else:
+            del st.session_state.edit_kode
+    st.write("---")
     st.subheader("Daftar Alat")
     cari_alat = st.text_input("🔍 Cari Alat", placeholder="Ketik misal: Dongkrak, Kunci, Tang...")
     if cari_alat:
