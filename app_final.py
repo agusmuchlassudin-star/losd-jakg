@@ -156,8 +156,9 @@ try:
 except Exception as e:
     data_awal_tools = [{"Nama Alat": nama_alat, "Kode": f"TL-{i:03d}", "Stok": "1"} for i, nama_alat in enumerate(LIST_ALAT_LO, start=1)]
 
-# Selalu update tools.csv dari Sheet biar sinkron
-simpan_csv("tools.csv", KOLOM_TOOLS, data_awal_tools)
+# Hanya isi dari Sheet kalau tools.csv masih kosong / belum ada
+if not os.path.exists("tools.csv") or len(baca_csv("tools.csv", KOLOM_TOOLS)) == 0:
+    simpan_csv("tools.csv", KOLOM_TOOLS, data_awal_tools)
 if not os.path.exists("peminjam.csv") or len(baca_csv("peminjam.csv", KOLOM_PEMINJAM)) == 0:
     simpan_csv("peminjam.csv", KOLOM_PEMINJAM, [{"Nama Peminjam": "agus", "NIPP": "12345", "Bagian": "Teknik"},{"Nama Peminjam": "Budi", "NIPP": "12346", "Bagian": "Listrik"},{"Nama Peminjam": "Siti", "NIPP": "12347", "Bagian": "Mekanik"}])
 
