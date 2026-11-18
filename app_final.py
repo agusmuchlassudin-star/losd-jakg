@@ -235,9 +235,9 @@ elif menu == "Data Master Tools":
     else:
         for t in tools_tampil:
             kode_t = str(t.get('Kode',''))
-            col_tulis, col_edit, col_hapus2 = st.columns([4, 1, 1])
+            col_tulis, col_edit, col_hapus2 = st.columns([6, 1, 1])
         with col_tulis:
-            st.write(f"{t.get('Kode','')} - {t.get('Nama','')} | Stok: {t.get('Stok','')}")
+            st.write(f"{t.get('Kode','')} - {t.get('Nama Alat','')} | Stok: {t.get('Stok','')}")
         if col_edit.button("✏️ Edit", key=f"edit_{kode_t}"):
             st.session_state.edit_kode = kode_t
             st.rerun()
@@ -254,7 +254,7 @@ elif menu == "Data Master Tools":
         idx_e = next((i for i, x in enumerate(tools) if str(x.get('Kode','')) == kode_e), None)
         if idx_e is not None:
             st.subheader(f"Edit - {tools[idx_e].get('Nama','')}")
-            nama_baru = st.text_input("Nama Alat", value=str(tools[idx_e].get('Nama','')))
+            nama_baru = st.text_input("Nama Alat", value=str(tools[idx_e].get('Nama Alat','')))
             stok_baru = st.number_input("Stok", min_value=0, value=int(tools[idx_e].get('Stok',0) or 0))
             c1, c2 = st.columns(2)
             if c1.button("💾 Simpan Edit"):
