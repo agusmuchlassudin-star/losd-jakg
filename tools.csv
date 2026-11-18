@@ -1,5 +1,5 @@
-Kode,Nama,Stok
-TL-001,Tang Buaya,2
-TL-002,Dongkrak,1
-TL-003,Pressure Sprayer,1
-TL-004,Bearing Separator,1
+Nama Alat,Kode,Stok
+Tang Buaya,TL-001,2
+Dongkrak,TL-002,1
+Penyemprot Tekanan,TL-003,1
+Pemisah Bantalan,TL-004,1
