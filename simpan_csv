@@ -114,7 +114,7 @@ def baca_csv(nama_file, kolom):
         return [row for row in reader if any(row.values())]
 
 def simpan_csv(nama_file, kolom, data):
-  def simpan_data():
+def simpan_data():
     try:
         simpan_csv("tools.csv", KOLOM_TOOLS, tools)
     except Exception:
