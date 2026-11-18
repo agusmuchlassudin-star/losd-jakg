@@ -238,11 +238,11 @@ elif menu == "Data Master Tools":
             with col_tulis:
                 st.write(f"🔧 {t.get('Nama Alat','-')} | Kode: {t.get('Kode','-')} | Stok: {t.get('Stok',0)}")
             if col_edit.button("✏️ Edit", key=f"edit_{idx}"):
-                st.session_state.edit_index = idx
+                st.session_state.edit_index = tools.index(t) if t in tools else idx
                 st.rerun()
             if col_hapus2.button("🗑️ Hapus", key=f"hapus_{idx}"):
                 # cari index asli di list tools
-                idx_asli = tools.index(t) if t in tools else idx
+                idx_asli = next((i for i, x in enumerate(tools) if x.get('Kode') == t.get('Kode')), idx)
                 tools.pop(idx_asli)
                 simpan_csv("tools.csv", KOLOM_TOOLS, tools)
                 st.rerun()
