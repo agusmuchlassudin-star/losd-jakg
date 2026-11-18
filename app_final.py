@@ -229,44 +229,28 @@ elif menu == "Data Master Tools":
         if simpan:
             if nama and kode: tambah_data("tools.csv", KOLOM_TOOLS, {"Nama Alat": nama, "Kode": kode, "Stok": str(int(stok))}); st.success(f"Alat {nama} berhasil ditambahkan!"); st.rerun()
             else: st.error("Nama dan Kode wajib diisi!")
-    st.write("---"); st.subheader("Daftar Alat"); cari_alat = st.text_input("🔍 Cari Alat", placeholder="Ketik misal: Dongkrak, Kunci, Tang...")
-    tools_tampil = [t for t in tools if cari_alat.lower() in t.get("Nama Alat","").lower()] if cari_alat else tools
-    if cari_alat: st.write(f"Ditemukan {len(tools_tampil)} alat")
-    if not tools_tampil: st.info("Belum ada data.")
-    else:
-        for t in tools_tampil:
-            kode_t = str(t.get('Kode',''))
-            col_tulis, col_edit, col_hapus2 = st.columns([6, 1, 1])
-        with col_tulis:
-            st.write(f"{t.get('Kode','')} - {t.get('Nama Alat','')} | Stok: {t.get('Stok','')}")
-        if col_edit.button("✏️ Edit", key=f"edit_{kode_t}"):
+st.write("---")
+st.subheader("Daftar Alat")
+cari_alat = st.text_input("🔍 Cari Alat", placeholder="Ketik misal: Dongkrak, Kunci, Tang...")
+if cari_alat:
+    tools_tampil = [t for t in tools if cari_alat.lower() in t.get("Nama Alat","").lower()]
+else:
+    tools_tampil = tools
+
+if not tools_tampil:
+    st.info("Belum ada data.")
+else:
+    for idx, t in enumerate(tools_tampil):
+        kode_t = t.get("Kode","")
+        c1, c2, c3 = st.columns([6,1,1])
+        c1.write(f"{kode_t} - {t.get('Nama Alat','')} | Stok: {t.get('Stok','')}")
+        if c2.button("✏️ Edit", key=f"edit_{kode_t}_{idx}"):
             st.session_state.edit_kode = kode_t
             st.rerun()
-        if col_hapus2.button("🗑️ Hapus", key=f"hapus_{kode_t}"):
-            idx_asli = next((i for i, x in enumerate(tools) if str(x.get('Kode','')) == kode_t), None)
-            if idx_asli is not None:
-                tools.pop(idx_asli)
-                simpan_csv("tools.csv", KOLOM_TOOLS, tools)
+        if c3.button("🗑️ Hapus", key=f"hapus_{kode_t}_{idx}"):
+            tools = [x for x in tools if x.get("Kode","") != kode_t]
+            simpan_csv("tools.csv", KOLOM_TOOLS, tools)
             st.rerun()
-
-    # Form Edit diluar for
-    if st.session_state.get("edit_kode"):
-        kode_e = st.session_state.edit_kode
-        idx_e = next((i for i, x in enumerate(tools) if str(x.get('Kode','')) == kode_e), None)
-        if idx_e is not None:
-            st.subheader(f"Edit - {tools[idx_e].get('Nama','')}")
-            nama_baru = st.text_input("Nama Alat", value=str(tools[idx_e].get('Nama Alat','')))
-            stok_baru = st.number_input("Stok", min_value=0, value=int(tools[idx_e].get('Stok',0) or 0))
-            c1, c2 = st.columns(2)
-            if c1.button("💾 Simpan Edit"):
-                tools[idx_e]['Nama'] = nama_baru
-                tools[idx_e]['Stok'] = stok_baru
-                simpan_csv("tools.csv", KOLOM_TOOLS, tools)
-                st.session_state.edit_kode = None
-                st.rerun()
-            if c2.button("Batal"):
-                st.session_state.edit_kode = None
-                st.rerun()
 elif menu == "Data Peminjam":
     st.title("👤 Data Peminjam"); st.subheader("Tambah Peminjam Baru")
     with st.form("form_peminjam"):
