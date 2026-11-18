@@ -240,7 +240,7 @@ elif menu == "Data Master Tools":
                 # cari index asli di list tools
                 idx_asli = tools.index(t) if t in tools else idx
                 tools.pop(idx_asli)
-                simpan_data()
+                simpan_csv("tools.csv", KOLOM_TOOLS, tools)
                 st.rerun()
             if st.session_state.get("edit_index") == idx:
                 st.markdown("---")
@@ -254,7 +254,7 @@ elif menu == "Data Master Tools":
                     tools[idx_asli]["Nama Alat"] = nama_baru
                     tools[idx_asli]["Stok"] = stok_baru
                     tools[idx_asli]["Kode"] = kode_baru
-                    simpan_data()
+                    simpan_csv("tools.csv", KOLOM_TOOLS, tools)
                     st.session_state.edit_index = None
                     st.rerun()
                 if c_batal.button("❌ Batal", key=f"batal_{idx}"):
