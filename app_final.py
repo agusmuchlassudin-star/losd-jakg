@@ -1,367 +1,412 @@
 import streamlit as st
-# --- OBAT BIAR TABEL & TANGGAL TERANG LAGI ---
-st.markdown("""
-<style>
-/* Kotak tanggal & semua input jadi putih, tulisan item */
-input, .stDateInput input, .stTextInput input, .stSelectbox div {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-/* Label Dari Tanggal / Sampai Tanggal jadi item terang */
-label, .stDateInput label {
-  color: #000000 !important;
-}
-/* Tabel Riwayat jadi putih, tulisan item */
-div[data-testid="stDataFrame"] *, div[data-testid="stTable"] * {
-  background-color: #FFFFFF !important;
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-/* Judul kolom tabel tetep biru dongker, tulisan putih biar cakep */
-div[data-testid="stDataFrame"] thead th, div[data-testid="stDataFrame"] [role="columnheader"] {
-  background-color: #0F2A44 !important;
-  color: #FFFFFF !important;
-  -webkit-text-fill-color: #FFFFFF !important;
-}
-/* Tombol Cari & Tampilkan Semua tetep oren */
-button {
-  color: #FFFFFF !important;
-}
-</style>
-""", unsafe_allow_html=True)
-import csv
 import pandas as pd
-import os
 from datetime import datetime, date
+from pathlib import Path
+import json
 
-st.set_page_config(page_title="Management Tools LOSD JAKG", page_icon="logo.png.jpg", layout="wide")
-# --- HEADER MEMANJANG BALIK LAGI ---
-if os.path.exists("header.png.jpg"):
-    st.image("logo.png", use_container_width=True)
+# =========================================================
+# MANAGEMENT TOOLS LOSD JAKG
+# Database: Google Spreadsheet (gspread) with local CSV fallback
+# =========================================================
+st.set_page_config(
+    page_title="Management Tools | LOSD JAKG",
+    page_icon="🧰",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-  # --- RUNNING TEXT STYLE CANTIK V3 PALING ATAS - JAKG ---
-st.markdown("""
+NAVY = "#102B46"
+BLUE = "#1769AA"
+ORANGE = "#F58220"
+BG = "#F3F6FA"
+GREEN = "#16845B"
+RED = "#C94343"
+
+st.markdown(f"""
 <style>
-.jakg-box-v3 {
-  overflow: hidden;
-  background: linear-gradient(90deg, #0F2A44 0%, #1A4A7A 50%, #FF6B00 100%) !important;
-  border: 2px solid #FFCC00 !important;
-  border-radius: 12px !important;
-  padding: 14px 0px !important;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.4) !important;
-  white-space: nowrap !important;
-}
-.jakg-track-v3 {
-  display: inline-flex !important;
-  white-space: nowrap !important;
-  animation: jakg-jalan-v3 60s linear infinite !important;
-}
-.jakg-track-v3 span {
-  color: #FFEB00 !important;
-  -webkit-text-fill-color: #FFEB00 !important;
-  font-size: 24px !important;
-  font-weight: 900 !important;
-  font-family: Arial, sans-serif !important;
-  letter-spacing: 1px !important;
-  text-shadow: 0px 0px 10px #FFEB00, 2px 2px 3px black !important;
-  padding-right: 80px !important;
-}
-@keyframes jakg-jalan-v3 {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-</style>
-<div class="jakg-box-v3"><div class="jakg-track-v3">
-<span style="color:#FFEB00 !important; -webkit-text-fill-color:#FFEB00 !important;">SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp; ✦ &nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp; ✦ &nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp; ✦ &nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI &nbsp; ✦ &nbsp;</span>
-<span style="color:#FFEB00 !important; -webkit-text-fill-color:#FFEB00 !important;">SELAMAT DATANG DI MANAGEMENT TOOLS LOSD JAKG &nbsp; ✦ &nbsp; UTAMAKAN KESELAMATAN KERJA &nbsp; ✦ &nbsp; KEMBALIKAN TOOLS SETELAH DIPAKAI &nbsp; ✦ &nbsp; LOSD JAKG - SIAP, SELAMAT, MELAYANI &nbsp; ✦ &nbsp;</span>
-</div></div>
-""", unsafe_allow_html=True)
-# --- LOGO BARU DI DEPAN / SIDEBAR ---
-LOGO_KAI = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg/500px-Logo_PT_Kereta_Api_Indonesia_%28Persero%29_2020.svg.png"
-
-# --- LOGO KAI DITENGAH SIDEBAR ---
-c_kiri, c_tengah, c_kanan = st.sidebar.columns([1, 2, 1])
-with c_tengah:
-    st.image(LOGO_KAI, width=170)
-st.sidebar.markdown("<p style='text-align:center; color:white; font-size:13px; font-weight:bold;'>Depo Gerbong Jakarta Gudang<br>LOSD JAKG</p>", unsafe_allow_html=True)
-st.sidebar.markdown("### 🎵 Mars KAI")
-st.sidebar.video("https://www.youtube.com/watch?v=zL9s0WoVHgA")
-st.sidebar.markdown("---")
-
-
-st.markdown("""
-<style>
-    .stApp { background-color: #F0F2F6; }
-    h1 { color: #0F2A44 !important; text-align: center !important; }
-    .stApp p, .stApp label, .stApp span, .stApp div { color: #0F2A44 !important; }
-    div[data-testid="stMetric"] { background-color: white !important; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-top: 4px solid #0066CC; }
-    .stButton > button { background-color: #FF6B00 !important; color: white !important; border: none !important; border-radius: 10px !important; font-weight: bold !important; width: 100%; }
-    .stButton > button * { color: white !important; }
-    section[data-testid="stSidebar"] { background-color: #0F2A44 !important; }
-    section[data-testid="stSidebar"] p, section[data-testid="stSidebar"] label, section[data-testid="stSidebar"] span { color: white !important; }
-    input { color: black !important; background-color: white !important; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+html, body, [class*="css"] {{ font-family: Inter, sans-serif; }}
+.stApp {{ background: {BG}; }}
+section[data-testid="stSidebar"] {{ background: {NAVY}; }}
+section[data-testid="stSidebar"] * {{ color: #fff !important; }}
+.block-container {{ padding-top: 1.5rem; padding-bottom: 2.5rem; max-width: 1500px; }}
+h1, h2, h3 {{ color: {NAVY}; }}
+.hero {{
+  background: linear-gradient(115deg, {NAVY} 0%, #1D5684 68%, {ORANGE} 100%);
+  padding: 26px 30px; border-radius: 18px; color: white; margin-bottom: 22px;
+  box-shadow: 0 8px 24px rgba(16,43,70,.14);
+}}
+.hero h1 {{ color: white !important; margin: 0; font-size: 30px; }}
+.hero p {{ color: #EAF2F8 !important; margin: 7px 0 0 0; }}
+.kpi {{
+  background: white; border: 1px solid #E5EBF1; border-radius: 16px;
+  padding: 18px 20px; box-shadow: 0 4px 14px rgba(16,43,70,.06);
+  min-height: 116px;
+}}
+.kpi-label {{ color: #637487; font-size: 13px; font-weight: 600; }}
+.kpi-value {{ color: {NAVY}; font-size: 32px; font-weight: 800; margin-top: 5px; }}
+.kpi-note {{ color: #8A98A8; font-size: 11px; margin-top: 2px; }}
+.section-card {{
+ background: white; border: 1px solid #E5EBF1; border-radius: 16px;
+ padding: 18px 20px; box-shadow: 0 3px 12px rgba(16,43,70,.04);
+}}
+div.stButton > button, div.stDownloadButton > button {{
+ background: {ORANGE}; color: white; border: 0; border-radius: 10px;
+ font-weight: 700; min-height: 42px;
+}}
+div.stButton > button:hover, div.stDownloadButton > button:hover {{
+ background: #DE6D12; color: white; border: 0;
+}}
+[data-testid="stDataFrame"] {{ background: white; border-radius: 12px; }}
+[data-testid="stForm"] {{ background: white; border: 1px solid #E5EBF1; border-radius: 14px; padding: 18px; }}
+small {{ color: #718096; }}
 </style>
 """, unsafe_allow_html=True)
 
-def baca_csv(nama_file, kolom):
-    if not os.path.exists(nama_file):
-        with open(nama_file, 'w', newline='', encoding='utf-8') as f:
-            writer = csv.DictWriter(f, fieldnames=kolom); writer.writeheader()
-        return []
-    with open(nama_file, 'r', newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        return [row for row in reader if any(row.values())]
+# ------------------ DATA LAYER ------------------
+TABLES = {
+    "Tools": ["Nama Alat", "Kode", "Stok"],
+    "Peminjam": ["Nama Peminjam", "NIPP", "Bagian"],
+    "Peminjaman": ["ID Transaksi", "Nama Peminjam", "NIPP", "Nama Alat", "Kode Alat",
+                   "Jumlah", "Tanggal Pinjam", "Tanggal Kembali", "Status"],
+}
+DATA_DIR = Path("data")
+DATA_DIR.mkdir(exist_ok=True)
 
-def simpan_csv(nama_file, kolom, data):
-    with open(nama_file, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=kolom)
-        writer.writeheader()
-        writer.writerows(data)
-def simpan_data():
+def local_read(table):
+    path = DATA_DIR / f"{table.lower()}.csv"
+    if path.exists():
+        df = pd.read_csv(path, dtype=str).fillna("")
+        for col in TABLES[table]:
+            if col not in df.columns:
+                df[col] = ""
+        return df[TABLES[table]]
+    return pd.DataFrame(columns=TABLES[table])
+
+def local_write(table, df):
+    df.reindex(columns=TABLES[table]).fillna("").to_csv(
+        DATA_DIR / f"{table.lower()}.csv", index=False, encoding="utf-8-sig"
+    )
+
+@st.cache_resource
+def get_gspread_client():
+    import gspread
+    from google.oauth2.service_account import Credentials
+    secrets = st.secrets
+    if "gcp_service_account" not in secrets or "spreadsheet" not in secrets:
+        return None
+    creds_info = dict(secrets["gcp_service_account"])
+    scopes = ["https://www.googleapis.com/auth/spreadsheets",
+              "https://www.googleapis.com/auth/drive"]
+    creds = Credentials.from_service_account_info(creds_info, scopes=scopes)
+    client = gspread.authorize(creds)
+    return client.open_by_key(str(secrets["spreadsheet"]["id"]))
+
+def read_table(table):
     try:
-        simpan_csv("tools.csv", KOLOM_TOOLS, tools)
-    except Exception:
-        pass
+        book = get_gspread_client()
+        if book is None:
+            return local_read(table), "local"
+        try:
+            ws = book.worksheet(table)
+        except Exception:
+            ws = book.add_worksheet(title=table, rows=1000, cols=len(TABLES[table]))
+            ws.append_row(TABLES[table])
+        values = ws.get_all_records()
+        df = pd.DataFrame(values)
+        for col in TABLES[table]:
+            if col not in df.columns:
+                df[col] = ""
+        return df[TABLES[table]].fillna("").astype(str), "google"
+    except Exception as exc:
+        st.session_state["db_error"] = str(exc)
+        return local_read(table), "local"
+
+def write_table(table, df):
+    df = df.reindex(columns=TABLES[table]).fillna("").astype(str)
     try:
-        simpan_csv("peminjam.csv", KOLOM_PEMINJAM, peminjam)
-    except Exception:
-        pass
+        book = get_gspread_client()
+        if book is None:
+            local_write(table, df)
+            return "local"
+        try:
+            ws = book.worksheet(table)
+        except Exception:
+            ws = book.add_worksheet(title=table, rows=1000, cols=len(TABLES[table]))
+        ws.clear()
+        ws.update([TABLES[table]] + df.values.tolist(), value_input_option="USER_ENTERED")
+        local_write(table, df)
+        return "google"
+    except Exception as exc:
+        st.session_state["db_error"] = str(exc)
+        local_write(table, df)
+        raise RuntimeError(f"Gagal menyimpan ke Google Spreadsheet: {exc}") from exc
+
+def refresh_data():
+    st.cache_data.clear()
+    st.rerun()
+
+tools, db_tools = read_table("Tools")
+borrowers, db_borrowers = read_table("Peminjam")
+loans, db_loans = read_table("Peminjaman")
+db_mode = "Google Spreadsheet" if "google" in (db_tools, db_borrowers, db_loans) else "Penyimpanan lokal (CSV)"
+
+# ------------------ SIDEBAR ------------------
+with st.sidebar:
+    st.markdown("<div style='text-align:center;font-size:48px'>🧰</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center;font-weight:800;font-size:18px'>MANAGEMENT TOOLS</div>", unsafe_allow_html=True)
+    st.markdown("<div style='text-align:center;font-size:12px;opacity:.85'>DEPO GERBONG JAKARTA GUDANG<br>LOSD JAKG</div>", unsafe_allow_html=True)
+    st.markdown("---")
+    menu = st.radio("NAVIGASI", [
+        "Dashboard", "Data Master Tools", "Data Peminjam",
+        "Peminjaman Tools", "Pengembalian Tools", "Riwayat Peminjaman", "Laporan"
+    ], label_visibility="visible")
+    st.markdown("---")
+    st.caption(f"Database aktif: {db_mode}")
+    if st.button("🔄 Muat Ulang Data", use_container_width=True):
+        refresh_data()
+    st.markdown("---")
+    st.caption("Utamakan keselamatan kerja • Kembalikan tools setelah digunakan")
+
+# ------------------ HEADER ------------------
+st.markdown("""
+<div class="hero">
+  <h1>Management Tools LOSD JAKG</h1>
+  <p>Sistem informasi pengelolaan inventaris, peminjaman, dan pengembalian peralatan kerja.</p>
+</div>
+""", unsafe_allow_html=True)
+
+if db_mode != "Google Spreadsheet":
+    st.warning("Aplikasi saat ini berjalan dengan penyimpanan CSV lokal. Hubungkan Google Spreadsheet melalui file secrets.toml agar data tersimpan terpusat.")
+if st.session_state.get("db_error"):
+    st.error("Koneksi database: " + st.session_state["db_error"])
+
+# Helpers
+def save_and_reload(table, df, success_msg):
     try:
-        simpan_csv("transaksi.csv", KOLOM_TRANSAKSI, transaksi)
-    except Exception:
-        pass
-    with open(nama_file, 'w', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=kolom); writer.writeheader(); writer.writerows(data)
+        mode = write_table(table, df)
+        st.success(success_msg + (" (Google Spreadsheet)" if mode == "google" else " (CSV lokal)"))
+        st.cache_data.clear()
+        st.rerun()
+    except RuntimeError as err:
+        st.error(str(err))
 
-def tambah_data(nama_file, kolom, baris_baru):
-    data = baca_csv(nama_file, kolom); data.append(baris_baru); simpan_csv(nama_file, kolom, data)
+def metric_card(label, value, note, icon):
+    st.markdown(f"""<div class="kpi"><div class="kpi-label">{icon} &nbsp;{label}</div>
+    <div class="kpi-value">{value}</div><div class="kpi-note">{note}</div></div>""", unsafe_allow_html=True)
 
-KOLOM_TOOLS = ["Nama Alat", "Kode", "Stok"]
-KOLOM_PEMINJAM = ["Nama Peminjam", "NIPP", "Bagian"]
-KOLOM_PINJAM = ["Nama Peminjam", "Nama Alat", "Jumlah", "Tanggal Pinjam", "Status"]
-
-LIST_ALAT_LO = ["Tang Buaya Bengkok 10","Xing Bo","Preasure Sprayer","Bearing Sparator","Thermometer","Insulation Tester / Tes Pen","Air Duster","Flaring Tools","Waterpas 600mm","Kunci Pas Ring Ratchet 36","Gerinda Tangan","Bor Tangan","Pompa","Mesin Amplas","Jig Saw","Dongkrak Simplex 10T","Dongkrak Simplex 5T","Dongkrak Hidrolik 30T","Dongkrak Hidrolik 10T","Box MCB Plastik","S21 Portable","Rambu Perawatan Genset","Rambu Perawatan PB / Perbaikan","Rambu Perawatan P3","Rambu Perawatan P6","Rambu Perawatan P12","Spray Gun F75","Kaca Mata Safety","Kaca Mata Las","Rompi Kolong","Kunci Inggris","Kunci Pipa","Tang Kombinasi","Tang Potong","Snapring Straight","Snapring Curved","Pahat","Palu Kecil","Palu Besar","Palu Besar 5 Kg","Linggis","Gagang Kunci Shock 3/4","Ragum","Box Impack","Vacum Cleaner Milwaukee","Back To Back","Kunci Momen","Kunci Momen Kecil Uk 1/2","Diameter Roda","Blok Kalibrasi","Crack Detector","Sarung Tangan Las","Goseave / Baju Las","Kawat Las RB & LB","Topeng Las","Mesin Las","Kabel Roll","Gerinda Cutting","Crimping Hidrolik","Kunci Sok 1 Set 60 Pc (SATA)","Impack 1/2","Stopwatch","Clearence","Meteran 7.5 m","Sigmat","Manometer","Mal Knuckle","Obeng (+)","Obeng (-)","Obeng Ketok","Kunci (L) Bintang","Kunci (L)","Mata Bor 4.0","Mata Bor 4.5","Mata Bor 5.0","Mata Bor 8.0","Mata Bor 10.0","Mata Bor 16","Mata Bor Beton","Kunci Shock","Gergaji Besi","Metrix","Cidi Met","Kepala Snei","Box Senai 1 Set","Mesin Senai","Mistar Panjang","Mistar Siku","Semboyan 21 Malam Portebel","Box S21","Kape","Sikat Kawat","Stang Sealler Botol Manual","Stang Sealler Botol Milwaukee","Senter","Senter Kepala Milwaukee","Senter Kepala Sunrei","Aki 60A","Tang Krimping / Skun","Gunting Potong","Tang Ripet","Bateray Tester","Tang Amper","Merger","Multimeter Digital 101","Kabel Kopler Panjang","Kabel Kopler","Karet List Kaca U","Selang Kawat","Manipol Gauge AC","Kunci T 10","Kunci T 12","Kunci T 13","Kunci T 17","Kunci T 19","Charger Accu","Tekel","Kunci Ring Pas 16","Kunci Ring Pas 17","Kunci Ring Pas 19","Kunci Ring Pas 22","Kunci Ring Pas 23","Kunci Ring Pas 24","Kunci Ring Pas 26","Kunci Ring Pas 27","Kunci Ring Pas 28","Kunci Ring Pas 29","Kunci Ring Pas 30","Kunci Ring Pas 32","Kunci Ring Pas 34","Kunci Ring Pas 36","Kunci Ring Pas 38","Kunci Ring 20,22","Kunci Ring 21,23","Kunci Ring 24,27","Kunci Ring 25,28","Kunci Ring 30,32","Kunci Pas 14,17","Kunci Pas 16,17","Kunci Pas 21-23","Kunci Pas 25-28","Kunci Pas 30-32","Kunci Ring Pas Ratchet 8,10,12,13,14,16,17,19,24","Kunci L Set Model T 2.5,3,4,5,6,8,10","Mesin Gerinda Portebel","Bor Tangan Portebel","Bor Duduk","Bateray Milwaukee","Bateray Bor Portable","Tangga Kecil","Rapid Charger Milwaukee","Beri","Heavy Duty Nut Splitter","Cordless Portable","Impack 3/4","Kunci Ring 30/32","Kunci Ring 28/25","Kunci Ring 27/24","Kunci Ring 23/21","Kunci Ring 22/20","Kunci Ring 8/9","Kunci Ring 7/6","Kunci Ring Pas 23","Kunci Ring Pas 22","Kunci Pas 26/24","Kunci Pas 23/21","Kunci Pas 15/14","Kunci T 17"]
-
-# --- TARIK DATA DARI SHEET DATA_BERSIH ---
-SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRV6iCRsvA3S8uCNNdNbvvrWnFxKxRoepGrZGL_3bWswWttq8ECPGMDNTL8UhqgTyeOcfkm6gkTODEJ/pub?gid=1373973017&single=true&output=csv"
-try:
-    df_sheet = pd.read_csv(SHEET_URL)
-    df_sheet.columns = [c.strip() for c in df_sheet.columns]
-    # Ambil kolom Nama Alat dari Sheet, buang yang kosong
-    col_nama = [c for c in df_sheet.columns if "Nama" in c or "Alat" in c][0]
-    list_dari_sheet = df_sheet[col_nama].dropna().astype(str).str.strip().tolist()
-    list_dari_sheet = [x for x in list_dari_sheet if x != "" and x.lower() != "nan"]
-    data_awal_tools = [{"Nama Alat": nama_alat, "Kode": f"TL-{i:03d}", "Stok": "1"} for i, nama_alat in enumerate(list_dari_sheet, start=1)]
-except Exception as e:
-    data_awal_tools = [{"Nama Alat": nama_alat, "Kode": f"TL-{i:03d}", "Stok": "1"} for i, nama_alat in enumerate(LIST_ALAT_LO, start=1)]
-
-# Hanya isi dari Sheet kalau tools.csv masih kosong / belum ada
-if not os.path.exists("tools.csv") or len(baca_csv("tools.csv", KOLOM_TOOLS)) == 0:
-    simpan_csv("tools.csv", KOLOM_TOOLS, data_awal_tools)
-if not os.path.exists("peminjam.csv") or len(baca_csv("peminjam.csv", KOLOM_PEMINJAM)) == 0:
-    simpan_csv("peminjam.csv", KOLOM_PEMINJAM, [{"Nama Peminjam": "agus", "NIPP": "12345", "Bagian": "Teknik"},{"Nama Peminjam": "Budi", "NIPP": "12346", "Bagian": "Listrik"},{"Nama Peminjam": "Siti", "NIPP": "12347", "Bagian": "Mekanik"}])
-
-st.sidebar.title("MENU UTAMA")
-menu = st.sidebar.radio("Pilih Menu:", ["Dashboard", "Data Master Tools", "Data Peminjam", "Peminjaman Tools", "Pengembalian Tools", "Riwayat Peminjaman", "Laporan"])
-tools = baca_csv("tools.csv", KOLOM_TOOLS)
-for t in tools:
-    if "Tang Buaya" in t.get("Nama Alat", ""): t["Stok"] = "1"
-simpan_csv("tools.csv", KOLOM_TOOLS, tools)
-peminjam = baca_csv("peminjam.csv", KOLOM_PEMINJAM)
-riwayat = baca_csv("peminjaman.csv", KOLOM_PINJAM)
-
-# --- TEMA ADEM - GAK SILAU ---
-st.markdown("""<style>
-section[data-testid="stSidebar"] { background-color: #0F2A44 !important; }
-section[data-testid="stSidebar"] * { color: #FFFFFF !important; background-color: #0F2A44 !important; }
-section[data-testid="stMain"] { background-color: #DCE6EC !important; }
-section[data-testid="stMain"] * { color: #1A1A1A !important; }
-div[data-testid="stAppViewBlockContainer"] { background-color: #EAF0F4 !important; border-radius: 12px; padding: 20px !important; }
-input { color: #000000 !important; background-color: #FFFFFF !important; }
-button { background-color: #FF7A00 !important; color: #FFFFFF !important; }
-</style>""", unsafe_allow_html=True)
-
-def tampilkan_list(data, format_func):
-    if not data: st.info("Belum ada data.")
-    else:
-        for item in data: st.write("• " + format_func(item)); st.write("---")
-
+# ------------------ PAGES ------------------
 if menu == "Dashboard":
-    # --- DASHBOARD CANTIK ALA KAI ---
-  st.markdown("""
-  <style>
-  .kpi-card { background: white; border-radius: 16px; padding: 18px 20px; box-shadow: 0 4px 18px rgba(0,0,0,0.08); border-top: 5px solid #0F2A44; }
-  .kpi-blue { border-top-color: #1A4B8F; }
-  .kpi-orange { border-top-color: #F7941D; }
-  .kpi-red { border-top-color: #E53935; }
-  .kpi-green { border-top-color: #2E9E5B; }
-  .kpi-label { font-size: 13px; color: #666; font-weight: 600; }
-  .kpi-value { font-size: 38px; font-weight: 800; color: #0F2A44; margin: 2px 0; }
-  .kpi-icon { font-size: 28px; float: right; }
-  .kpi-sub { font-size: 12px; color: #999; }
-  </style>
-  """, unsafe_allow_html=True)
-  
-  st.markdown("### 📊 Dashboard Monitoring Tools")
-  st.write("Sistem Informasi Pengelolaan Alat dan Inventaris - Dipo Gerbong Jakarta Gudang")
-  
-  total_jenis = len(tools); total_stok = sum(int(t.get("Stok", 0) or 0) for t in tools) if tools else 0
-  sedang_dipinjam = sum(int(r.get("Jumlah", 0) or 0) for r in riwayat if r.get("Status") == "Dipinjam") if riwayat else 0
-  tersedia = total_stok - sedang_dipinjam
-  
-  c1, c2, c3, c4 = st.columns(4)
-  with c1:
-      st.markdown(f"""<div class="kpi-card kpi-blue"><div><span class="kpi-label">Total Jenis Alat</span><span class="kpi-icon">🧰</span></div><div class="kpi-value">{total_jenis}</div><div class="kpi-sub">Jenis alat terdaftar</div></div>""", unsafe_allow_html=True)
-  with c2:
-      st.markdown(f"""<div class="kpi-card kpi-orange"><div><span class="kpi-label">Total Stok</span><span class="kpi-icon">📦</span></div><div class="kpi-value">{total_stok}</div><div class="kpi-sub">Total unit di gudang</div></div>""", unsafe_allow_html=True)
-  with c3:
-      st.markdown(f"""<div class="kpi-card kpi-red"><div><span class="kpi-label">Sedang Dipinjam</span><span class="kpi-icon">🔧</span></div><div class="kpi-value">{sedang_dipinjam}</div><div class="kpi-sub">Alat sedang keluar</div></div>""", unsafe_allow_html=True)
-  with c4:
-      st.markdown(f"""<div class="kpi-card kpi-green"><div><span class="kpi-label">Tersedia</span><span class="kpi-icon">✅</span></div><div class="kpi-value">{tersedia}</div><div class="kpi-sub">Siap dipinjam</div></div>""", unsafe_allow_html=True)
-  
-  st.markdown("---")
-  st.info("👋 Selamat datang di Sistem Peminjaman Tools - Dipo Gerbong Jakarta Gudang")
-elif menu == "Data Master Tools":
-    st.title("📦 Data Master Tools"); st.subheader("Tambah Alat Baru")
-    with st.form("form_alat"):
-        nama = st.text_input("Nama Alat"); kode = st.text_input("Kode Alat"); stok = st.number_input("Stok", min_value=0, step=1); simpan = st.form_submit_button("Simpan Alat")
-        if simpan:
-            if nama and kode: tambah_data("tools.csv", KOLOM_TOOLS, {"Nama Alat": nama, "Kode": kode, "Stok": str(int(stok))}); st.success(f"Alat {nama} berhasil ditambahkan!"); st.rerun()
-            else: st.error("Nama dan Kode wajib diisi!")
-    st.write("---")
-      # --- BLOK EDIT ---
-    if "edit_kode" in st.session_state and st.session_state.edit_kode:
-        tool_edit = next((x for x in tools if x.get("Kode","") == st.session_state.edit_kode), None)
-        if tool_edit:
-            st.subheader(f"Edit Alat: {st.session_state.edit_kode}")
-            edit_nama = st.text_input("Edit Nama Alat", value=tool_edit.get("Nama Alat",""), key="edit_nama_input")
-            try:
-                edit_stok_awal = int(tool_edit.get("Stok", 0) or 0)
-            except:
-                edit_stok_awal = 0
-            edit_stok = st.number_input("Edit Stok", min_value=0, value=edit_stok_awal, key="edit_stok_input")
-            c_simpan, c_batal = st.columns(2)
-            if c_simpan.button("Simpan Perubahan", key="simpan_edit_btn"):
-                for x in tools:
-                    if x.get("Kode","") == st.session_state.edit_kode:
-                        x["Nama Alat"] = edit_nama
-                        x["Stok"] = str(edit_stok)
-                simpan_csv("tools.csv", KOLOM_TOOLS, tools)
-                del st.session_state.edit_kode
-                st.rerun()
-            if c_batal.button("Batal", key="batal_edit_btn"):
-                del st.session_state.edit_kode
-                st.rerun()
+    st.subheader("Ringkasan Inventaris")
+    total_types = len(tools)
+    total_stock = pd.to_numeric(tools["Stok"], errors="coerce").fillna(0).sum() if len(tools) else 0
+    active = loans[loans["Status"].str.lower() == "dipinjam"] if len(loans) else loans
+    borrowed = pd.to_numeric(active["Jumlah"], errors="coerce").fillna(0).sum() if len(active) else 0
+    available = max(int(total_stock - borrowed), 0)
+    cols = st.columns(4)
+    with cols[0]: metric_card("Jenis Tools", total_types, "Jenis alat terdaftar", "🧰")
+    with cols[1]: metric_card("Total Stok", int(total_stock), "Unit terdata", "📦")
+    with cols[2]: metric_card("Sedang Dipinjam", int(borrowed), "Unit belum kembali", "📤")
+    with cols[3]: metric_card("Tersedia", available, "Perkiraan unit tersedia", "✅")
+    st.write("")
+    left, right = st.columns([1.25, 1])
+    with left:
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown("#### Status Peminjaman")
+        if len(loans):
+            status_counts = loans["Status"].value_counts().rename_axis("Status").reset_index(name="Jumlah")
+            st.bar_chart(status_counts.set_index("Status"))
         else:
-            del st.session_state.edit_kode
-    st.write("---")
-    st.subheader("Daftar Alat")
-    cari_alat = st.text_input("🔍 Cari Alat", placeholder="Ketik misal: Dongkrak, Kunci, Tang...")
-    if cari_alat:
-        tools_tampil = [t for t in tools if cari_alat.lower() in t.get("Nama Alat","").lower()]
-    else:
-        tools_tampil = tools
+            st.info("Belum ada transaksi peminjaman.")
+        st.markdown("</div>", unsafe_allow_html=True)
+    with right:
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown("#### Informasi Sistem")
+        st.write(f"**Database:** {db_mode}")
+        st.write(f"**Jumlah peminjam terdaftar:** {len(borrowers)}")
+        st.write(f"**Total transaksi:** {len(loans)}")
+        st.write(f"**Transaksi aktif:** {len(active)}")
+        st.markdown("</div>", unsafe_allow_html=True)
+    st.caption("Pastikan data stok dan transaksi diperbarui setiap terjadi peminjaman atau pengembalian.")
 
-    if not tools_tampil:
-        st.info("Belum ada data.")
-    else:
-        for idx, t in enumerate(tools_tampil):
-            kode_t = t.get("Kode","")
-            c1, c2, c3 = st.columns([6,1,1])
-            c1.write(f"{kode_t} - {t.get('Nama Alat','')} | Stok: {t.get('Stok','')}")
-            if c2.button("✏️ Edit", key=f"edit_{kode_t}_{idx}"):
-                st.session_state.edit_kode = kode_t
-                st.rerun()
-            if c3.button("🗑️ Hapus", key=f"hapus_{kode_t}_{idx}"):
-                tools = [x for x in tools if x.get("Kode","") != kode_t]
-                simpan_csv("tools.csv", KOLOM_TOOLS, tools)
-                st.rerun()
-elif menu == "Data Peminjam":
-    st.title("👤 Data Peminjam"); st.subheader("Tambah Peminjam Baru")
-    with st.form("form_peminjam"):
-        nama_p = st.text_input("Nama Peminjam"); nipp = st.text_input("NIPP"); bagian = st.text_input("Bagian"); simpan_p = st.form_submit_button("Simpan Peminjam")
-        if simpan_p:
-            if nama_p and nipp: tambah_data("peminjam.csv", KOLOM_PEMINJAM, {"Nama Peminjam": nama_p, "NIPP": nipp, "Bagian": bagian}); st.success(f"Peminjam {nama_p} berhasil ditambahkan!"); st.rerun()
-            else: st.error("Nama Peminjam dan NIPP wajib diisi!")
-    st.write("---"); st.subheader("Daftar Peminjam")
-    if not peminjam: st.info("Belum ada data.")
-    else:
-        for idx, p in enumerate(peminjam):
-            col_tulis, col_hapus = st.columns([4, 1])
-            with col_tulis: st.write(f"👤 {p.get('Nama Peminjam','-')} | NIPP: {p.get('NIPP','-')} | Bagian: {p.get('Bagian','-')}")
-            with col_hapus:
-                if st.button("🗑️ Hapus", key=f"hapus_peminjam_{idx}"):
-                    nama_hapus = p.get("Nama Peminjam")
-                    if any(r.get("Nama Peminjam") == nama_hapus and r.get("Status") == "Dipinjam" for r in riwayat): st.error(f"Gak bisa hapus {nama_hapus}, masih ada pinjaman!")
-                    else: simpan_csv("peminjam.csv", KOLOM_PEMINJAM, [x for x in peminjam if x != p]); st.success(f"Peminjam {nama_hapus} berhasil dihapus!"); st.rerun()
-            st.write("---")
-elif menu == "Peminjaman Tools":
-    st.title("📤 Peminjaman Tools"); st.write("Bisa pinjam lebih dari 1 alat sekaligus!")
-    if not peminjam: st.warning("Belum ada data peminjam. Tambah dulu di menu Data Peminjam.")
-    elif not tools: st.warning("Belum ada data alat.")
-    else:
-        nama_pilih = st.selectbox("Pilih Peminjam", [p.get("Nama Peminjam","-") for p in peminjam])
-        daftar_alat = [f"{t.get('Nama Alat','-')} (Stok: {t.get('Stok','0')})" for t in tools]
-        alat_terpilih = st.multiselect("Pilih Alat (Bisa Lebih Dari 1)", daftar_alat); jumlah_per_alat = {}
-        if alat_terpilih:
-            st.write("---"); st.subheader("Atur Jumlah Tiap Alat:")
-            for a in alat_terpilih:
-                nama_alat_bersih = a.split(" (Stok:")[0]; jumlah_per_alat[nama_alat_bersih] = st.number_input(f"Jumlah {nama_alat_bersih}", min_value=1, step=1, key=f"jml_{nama_alat_bersih}")
-            if st.button("Pinjam Semua Alat"):
-                gagal = []
-                for nama_alat, jml in jumlah_per_alat.items():
-                    stok_alat = next((t for t in tools if t.get("Nama Alat") == nama_alat), None)
-                    if not stok_alat or int(stok_alat.get("Stok", 0) or 0) < jml: gagal.append(nama_alat)
-                if gagal: st.error(f"Stok tidak cukup untuk: {', '.join(gagal)}")
+elif menu == "Data Master Tools":
+    st.subheader("📦 Data Master Tools")
+    with st.expander("＋ Tambah Tools Baru", expanded=False):
+        with st.form("add_tool", clear_on_submit=True):
+            c1, c2, c3 = st.columns([2, 1, 1])
+            nama = c1.text_input("Nama Alat")
+            kode = c2.text_input("Kode Alat")
+            stok = c3.number_input("Stok Awal", min_value=0, step=1)
+            submitted = st.form_submit_button("Simpan Tools", use_container_width=True)
+            if submitted:
+                if not nama.strip() or not kode.strip():
+                    st.error("Nama alat dan kode wajib diisi.")
+                elif (tools["Kode"].str.casefold() == kode.strip().casefold()).any():
+                    st.error("Kode alat sudah digunakan.")
                 else:
-                    for nama_alat, jml in jumlah_per_alat.items():
-                        for t in tools:
-                            if t.get("Nama Alat") == nama_alat: t["Stok"] = str(int(t.get("Stok", 0) or 0) - int(jml))
-                        tambah_data("peminjaman.csv", KOLOM_PINJAM, {"Nama Peminjam": nama_pilih, "Nama Alat": nama_alat, "Jumlah": str(int(jml)), "Tanggal Pinjam": datetime.now().strftime("%Y-%m-%d"), "Status": "Dipinjam"})
-                    simpan_csv("tools.csv", KOLOM_TOOLS, tools); st.success(f"Berhasil meminjam {len(jumlah_per_alat)} alat!"); st.rerun()
-        else: st.info("Pilih minimal 1 alat dulu di atas 👆")
-elif menu == "Pengembalian Tools":
-    st.title("📥 Pengembalian Tools"); st.write("Bisa kembalikan banyak alat sekaligus!")
-    masih_pinjam = [r for r in riwayat if r.get("Status") == "Dipinjam"]
-    if not masih_pinjam: st.info("Tidak ada alat yang sedang dipinjam.")
+                    new = pd.concat([tools, pd.DataFrame([{"Nama Alat": nama.strip(), "Kode": kode.strip(), "Stok": str(stok)}])], ignore_index=True)
+                    save_and_reload("Tools", new, "Tools berhasil ditambahkan.")
+    search = st.text_input("🔎 Cari nama alat atau kode")
+    shown = tools.copy()
+    if search:
+        shown = shown[shown.apply(lambda r: search.lower() in " ".join(r.astype(str)).lower(), axis=1)]
+    st.dataframe(shown, use_container_width=True, hide_index=True)
+    if len(shown):
+        with st.expander("✏️ Edit atau Hapus Tools"):
+            selected_code = st.selectbox("Pilih kode alat", shown["Kode"].tolist())
+            item = tools[tools["Kode"] == selected_code].iloc[0]
+            with st.form("edit_tool"):
+                enama = st.text_input("Nama Alat", item["Nama Alat"])
+                estok = st.number_input("Stok", min_value=0, value=max(0, int(float(item["Stok"] or 0))))
+                c1, c2 = st.columns(2)
+                update = c1.form_submit_button("Simpan Perubahan", use_container_width=True)
+                delete = c2.form_submit_button("Hapus Tools", use_container_width=True)
+                if update:
+                    tools.loc[tools["Kode"] == selected_code, "Nama Alat"] = enama.strip()
+                    tools.loc[tools["Kode"] == selected_code, "Stok"] = str(estok)
+                    save_and_reload("Tools", tools, "Perubahan tools tersimpan.")
+                if delete:
+                    active_tool = loans[(loans["Kode Alat"] == selected_code) & (loans["Status"] == "Dipinjam")]
+                    if len(active_tool):
+                        st.error("Tools tidak dapat dihapus karena masih memiliki transaksi aktif.")
+                    else:
+                        save_and_reload("Tools", tools[tools["Kode"] != selected_code], "Tools berhasil dihapus.")
+
+elif menu == "Data Peminjam":
+    st.subheader("👤 Data Peminjam")
+    with st.expander("＋ Tambah Peminjam", expanded=False):
+        with st.form("add_borrower", clear_on_submit=True):
+            c1, c2, c3 = st.columns(3)
+            nama = c1.text_input("Nama Peminjam")
+            nipp = c2.text_input("NIPP")
+            bagian = c3.text_input("Bagian")
+            submitted = st.form_submit_button("Simpan Peminjam", use_container_width=True)
+            if submitted:
+                if not nama.strip() or not nipp.strip():
+                    st.error("Nama dan NIPP wajib diisi.")
+                elif (borrowers["NIPP"] == nipp.strip()).any():
+                    st.error("NIPP sudah terdaftar.")
+                else:
+                    new = pd.concat([borrowers, pd.DataFrame([{"Nama Peminjam": nama.strip(), "NIPP": nipp.strip(), "Bagian": bagian.strip()}])], ignore_index=True)
+                    save_and_reload("Peminjam", new, "Data peminjam berhasil ditambahkan.")
+    st.dataframe(borrowers, use_container_width=True, hide_index=True)
+    if len(borrowers):
+        with st.expander("Hapus Data Peminjam"):
+            nipp_del = st.selectbox("Pilih NIPP", borrowers["NIPP"].tolist())
+            if st.button("Hapus Peminjam", type="secondary"):
+                name_del = borrowers.loc[borrowers["NIPP"] == nipp_del, "Nama Peminjam"].iloc[0]
+                active_borrower = loans[(loans["NIPP"] == nipp_del) & (loans["Status"] == "Dipinjam")]
+                if len(active_borrower):
+                    st.error("Peminjam masih memiliki tools yang belum dikembalikan.")
+                else:
+                    save_and_reload("Peminjam", borrowers[borrowers["NIPP"] != nipp_del], f"Data {name_del} dihapus.")
+
+elif menu == "Peminjaman Tools":
+    st.subheader("📤 Peminjaman Tools")
+    if borrowers.empty or tools.empty:
+        st.warning("Data peminjam dan data tools harus tersedia sebelum transaksi.")
     else:
-        opsi = [f"{i} - {r.get('Nama Peminjam','-')} - {r.get('Nama Alat','-')} - {r.get('Jumlah','0')} - {r.get('Tanggal Pinjam','-')}" for i, r in enumerate(masih_pinjam)]
-        dipilih = st.multiselect("Centang alat yang mau dikembalikan (Bisa Banyak)", opsi)
-        if dipilih:
-            if st.button("Kembalikan Semua Yang Dipilih"):
-                for pil in dipilih:
-                    idx = int(pil.split(" - ")[0]); item = masih_pinjam[idx]
-                    for r in riwayat:
-                        if r == item and r.get("Status") == "Dipinjam": r["Status"] = "Dikembalikan"; break
-                    for t in tools:
-                        if t.get("Nama Alat") == item.get("Nama Alat"): t["Stok"] = str(int(t.get("Stok", 0) or 0) + int(item.get("Jumlah", 0) or 0))
-                simpan_csv("peminjaman.csv", KOLOM_PINJAM, riwayat); simpan_csv("tools.csv", KOLOM_TOOLS, tools); st.success(f"Berhasil mengembalikan {len(dipilih)} alat!"); st.rerun()
-        else: st.info("Centang dulu alatnya di atas 👆")
+        with st.form("borrow_form"):
+            borrower_options = {f'{r["Nama Peminjam"]} | NIPP {r["NIPP"]}': r for _, r in borrowers.iterrows()}
+            selected_borrower = st.selectbox("Pilih Peminjam", list(borrower_options))
+            selected_tools = st.multiselect("Pilih Tools (bisa lebih dari satu)", [
+                f'{r["Nama Alat"]} | {r["Kode"]} | stok {r["Stok"]}' for _, r in tools.iterrows()
+                if int(float(r["Stok"] or 0)) > 0
+            ])
+            quantities = {}
+            for choice in selected_tools:
+                code = choice.split("|")[1].strip()
+                stock = int(float(tools.loc[tools["Kode"] == code, "Stok"].iloc[0]))
+                quantities[code] = st.number_input(f"Jumlah - {choice}", min_value=1, max_value=stock, value=1, step=1, key=f"borrow_{code}")
+            submit = st.form_submit_button("Konfirmasi Peminjaman", use_container_width=True)
+            if submit:
+                if not selected_tools:
+                    st.error("Pilih minimal satu tools.")
+                else:
+                    borrower = borrower_options[selected_borrower]
+                    updated_tools = tools.copy()
+                    new_loans = loans.copy()
+                    for code, qty in quantities.items():
+                        idx = updated_tools.index[updated_tools["Kode"] == code][0]
+                        stock = int(float(updated_tools.at[idx, "Stok"] or 0))
+                        if qty > stock:
+                            st.error(f"Stok {code} tidak mencukupi.")
+                            st.stop()
+                        updated_tools.at[idx, "Stok"] = str(stock - qty)
+                        tool = updated_tools.loc[idx]
+                        new_loans.loc[len(new_loans)] = [
+                            datetime.now().strftime("%Y%m%d%H%M%S") + "-" + code,
+                            borrower["Nama Peminjam"], borrower["NIPP"], tool["Nama Alat"], code,
+                            str(qty), date.today().isoformat(), "", "Dipinjam"
+                        ]
+                    try:
+                        write_table("Tools", updated_tools)
+                        write_table("Peminjaman", new_loans)
+                        st.cache_data.clear()
+                        st.success("Transaksi peminjaman berhasil disimpan.")
+                        st.rerun()
+                    except RuntimeError as err:
+                        st.error(str(err))
+
+elif menu == "Pengembalian Tools":
+    st.subheader("📥 Pengembalian Tools")
+    active = loans[loans["Status"] == "Dipinjam"].copy()
+    if active.empty:
+        st.info("Tidak ada tools yang sedang dipinjam.")
+    else:
+        active["Pilihan"] = active.apply(lambda r: f'{r["ID Transaksi"]} | {r["Nama Peminjam"]} | {r["Nama Alat"]} | jumlah {r["Jumlah"]}', axis=1)
+        chosen = st.multiselect("Pilih transaksi yang akan dikembalikan", active["Pilihan"].tolist())
+        if st.button("Proses Pengembalian", use_container_width=True, disabled=not chosen):
+            updated_loans = loans.copy()
+            updated_tools = tools.copy()
+            for choice in chosen:
+                transaction_id = choice.split("|")[0].strip()
+                row_idx = updated_loans.index[updated_loans["ID Transaksi"] == transaction_id][0]
+                transaction = updated_loans.loc[row_idx]
+                updated_loans.at[row_idx, "Status"] = "Dikembalikan"
+                updated_loans.at[row_idx, "Tanggal Kembali"] = date.today().isoformat()
+                code = transaction["Kode Alat"]
+                tool_idx = updated_tools.index[updated_tools["Kode"] == code]
+                if len(tool_idx):
+                    idx = tool_idx[0]
+                    current_stock = int(float(updated_tools.at[idx, "Stok"] or 0))
+                    updated_tools.at[idx, "Stok"] = str(current_stock + int(float(transaction["Jumlah"] or 0)))
+            try:
+                write_table("Tools", updated_tools)
+                write_table("Peminjaman", updated_loans)
+                st.cache_data.clear()
+                st.success(f"{len(chosen)} transaksi berhasil dikembalikan.")
+                st.rerun()
+            except RuntimeError as err:
+                st.error(str(err))
 
 elif menu == "Riwayat Peminjaman":
-    st.title("📋 Riwayat Peminjaman"); st.subheader("🔍 Cari Berdasarkan Tanggal")
-    col1, col2, col3 = st.columns([2, 2, 1])
-    with col1: tgl_dari = st.date_input("Dari Tanggal", value=None)
-    with col2: tgl_sampai = st.date_input("Sampai Tanggal", value=None)
-    with col3: st.write(" "); st.write(" "); cari = st.button("🔍 Cari")
-    if st.button("Tampilkan Semua"): st.rerun()
-    riwayat_tampil = riwayat
-    if tgl_dari and tgl_sampai:
-        riwayat_tampil = []
-        for r in riwayat:
-            try:
-                tgl_data = datetime.strptime(r.get("Tanggal Pinjam",""), "%Y-%m-%d").date()
-                if tgl_dari <= tgl_data <= tgl_sampai: riwayat_tampil.append(r)
-            except: pass
-        st.success(f"Ditemukan {len(riwayat_tampil)} data dari {tgl_dari} sampai {tgl_sampai}")
-    st.write("---"); tampilkan_list(riwayat_tampil, lambda r: f"{r.get('Nama Peminjam','-')} pinjam {r.get('Nama Alat','-')} ({r.get('Jumlah','0')}) - {r.get('Tanggal Pinjam','-')} - {r.get('Status','-')}")
+    st.subheader("📋 Riwayat Peminjaman")
+    c1, c2, c3 = st.columns([1, 1, 1])
+    start = c1.date_input("Dari tanggal", value=None)
+    end = c2.date_input("Sampai tanggal", value=None)
+    status = c3.selectbox("Status", ["Semua", "Dipinjam", "Dikembalikan"])
+    shown = loans.copy()
+    if start and end:
+        shown = shown[(shown["Tanggal Pinjam"] >= start.isoformat()) & (shown["Tanggal Pinjam"] <= end.isoformat())]
+    elif start:
+        shown = shown[shown["Tanggal Pinjam"] >= start.isoformat()]
+    elif end:
+        shown = shown[shown["Tanggal Pinjam"] <= end.isoformat()]
+    if status != "Semua":
+        shown = shown[shown["Status"] == status]
+    st.dataframe(shown.drop(columns=["ID Transaksi"], errors="ignore"), use_container_width=True, hide_index=True)
+    st.caption(f"Menampilkan {len(shown)} transaksi.")
+
 elif menu == "Laporan":
-    st.title("📊 Laporan"); st.write(f"Total Transaksi: {len(riwayat)}")
-    tampilkan_list(riwayat, lambda r: f"{r.get('Nama Peminjam','-')} | {r.get('Nama Alat','-')} | {r.get('Jumlah','0')} | {r.get('Tanggal Pinjam','-')} | {r.get('Status','-')}")
-    if riwayat:
-        csv_text = "Nama Peminjam,Nama Alat,Jumlah,Tanggal Pinjam,Status\n"
-        for r in riwayat: csv_text += f"{r.get('Nama Peminjam','-')},{r.get('Nama Alat','-')},{r.get('Jumlah','0')},{r.get('Tanggal Pinjam','-')},{r.get('Status','-')}\n"
-        st.download_button("Download Laporan CSV", csv_text, "laporan_peminjaman.csv", "text/csv")
+    st.subheader("📊 Laporan Peminjaman")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Total Transaksi", len(loans))
+    c2.metric("Masih Dipinjam", int((loans["Status"] == "Dipinjam").sum()) if len(loans) else 0)
+    c3.metric("Sudah Kembali", int((loans["Status"] == "Dikembalikan").sum()) if len(loans) else 0)
+    st.dataframe(loans, use_container_width=True, hide_index=True)
+    csv_bytes = loans.to_csv(index=False).encode("utf-8-sig")
+    st.download_button("⬇️ Download Laporan CSV", csv_bytes, "laporan_peminjaman_losd_jakg.csv", "text/csv", use_container_width=True)
+
 st.markdown("---")
-st.markdown("<p style='text-align: right; font-size: 12px; color: grey;'>by: Agus Muchlassudin Effendhi</p>", unsafe_allow_html=True)
+st.markdown("<div style='text-align:right;color:#8190A0;font-size:12px'>Management Tools LOSD JAKG • Dikembangkan untuk operasional Depo Gerbong Jakarta Gudang</div>", unsafe_allow_html=True)
